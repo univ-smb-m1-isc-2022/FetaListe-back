@@ -22,6 +22,7 @@ Avec connexion Appli =
     String password,
 } 
 ```
+
 </td><td>En cas de succès
 
 ```json
