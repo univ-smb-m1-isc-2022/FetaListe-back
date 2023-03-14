@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,18 +16,22 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor // constructor with all args
 @NoArgsConstructor // constructor with no args
 @Entity
-@Table(name= "Recette")
-public class Recette {
+@Table(name= "Receipe")
+public class Receipe {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(name = "name")
+    private Integer id;
+    @ManyToOne
+    @Column(name = "Category_idCategory")
+    private Category category;
+    @Column(length = 100, name="name")
     private String name;
-    @Column(name = "creation_date")
-    private Date creation_date;
-    @Column(name = "description")
-    private String description;
-    @Column(name = "ingredient")
-    private String ingredients;
+    @Column(length = 500, anme="image")
+    private String image;
+    @Column(name = "rating")
+    private float rating;
+    @Column(name = "estimatedTime")
+    private float estimatedTime;
+
 }
