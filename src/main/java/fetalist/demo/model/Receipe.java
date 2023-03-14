@@ -1,11 +1,6 @@
 package fetalist.demo.model;
 
 import jakarta.persistence.*;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,22 +11,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor // constructor with all args
 @NoArgsConstructor // constructor with no args
 @Entity
-@Table(name= "Receipe")
+@Table
 public class Receipe {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     @ManyToOne
-    @Column(name = "Category_idCategory")
     private Category category;
-    @Column(length = 100, name="name")
+    @Column(length = 100)
     private String name;
-    @Column(length = 500, anme="image")
+    @Column(length = 500)
     private String image;
-    @Column(name = "rating")
     private float rating;
-    @Column(name = "estimatedTime")
-    private float estimatedTime;
+    private int estimatedTime;
 
 }

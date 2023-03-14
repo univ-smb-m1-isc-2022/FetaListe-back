@@ -1,41 +1,38 @@
 package fetalist.demo.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.sql.Date;
 
 @Data // lombok, getter and setter
 @Builder // lombok design partern builder
 @AllArgsConstructor // constructor with all args
 @NoArgsConstructor // constructor with no args
 @Entity
-@Table(name= "Token")
-public class Substitute {
+@Table
+public class Token {
     @Id
-    @Column(name="idToken")
-    private Integer idToken;
+    private Long idToken;
 
-    @Column(name="User_idUser")
-    private Integer idUser;
+    @OneToOne
+    private User idUser;
 
-    @Column(name="accessToken", lenght=50)
+    @Column(length=50)
     private String accessToken;
 
-    @Column(name="accessValidUntil")
     private Date accessValidUntil;
 
-    @Column(name="refereshToken", length=50)
+    @Column(length=50)
     private String refreshToken;
 
-    @Column(name="refereshValidToken", length=45)
+    @Column(length=45)
     private String refreshValidToken;
 
-    @Column(name="provider", length=45)
+    @Column(length=45)
     private String provider;
 
 

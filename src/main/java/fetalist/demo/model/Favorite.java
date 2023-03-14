@@ -1,9 +1,6 @@
 package fetalist.demo.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,12 +11,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor // constructor with all args
 @NoArgsConstructor // constructor with no args
 @Entity
-@Table(name= "Favorite")
-public class Substitute {
+@Table
+public class Favorite {
     @Id
-    @Column(name="User_idUser")
-    private Integer idUser;
+    @ManyToOne
+    private User idUser;
     @Id
-    @Column(name="Receipe_idReceipe")
-    private Integer idReceipe;
+    @ManyToOne
+    private Receipe idReceipe;
 }

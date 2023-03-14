@@ -1,5 +1,6 @@
 package fetalist.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,19 +14,19 @@ import java.util.Date;
 @AllArgsConstructor // constructor with all args
 @NoArgsConstructor // constructor with no args
 @Entity
-@Table(name= "User")
+@Table
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idUser;
-    @Column(length = 20, name="name")
+    private Long idUser;
+    @Column(length = 20)
     private String name;
-    @Column (length = 45,name="password")
+    @Column (length = 45)
+    @JsonIgnore
     private String password;
-    @Column (length = 50,name="mail")
+    @Column (length = 50)
     private String mail;
-    @Column (length = 15,name="phone")
+    @Column (length = 15)
     private String phone;
-    @Column (name="registerDate")
     private Date registerDate;
 }

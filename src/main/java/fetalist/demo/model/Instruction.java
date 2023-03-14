@@ -11,17 +11,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor // constructor with all args
 @NoArgsConstructor // constructor with no args
 @Entity
-@Table(name= "Instruction")
+@Table
 public class Instruction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idInstructions;
+    private Long idInstructions;
 
-    @Column(name = "instruction", lenght=1000)
+    @Column(length=1000)
     private String instruction;
 
-    @Column(name = "Receipe_idReceipe")
+    @ManyToOne
     private Receipe idReceipe;
 
 }

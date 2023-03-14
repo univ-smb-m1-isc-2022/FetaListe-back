@@ -1,10 +1,7 @@
 package fetalist.demo.model;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,19 +12,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor // constructor with all args
 @NoArgsConstructor // constructor with no args
 @Entity
-@Table(name= "ReceipeIngredient")
+@Table
 public class ReceipeIngredient
 {
     @Id
-    @Column (name ="Receipe_idReceipe")
-    private Integer idReceipe;
+    @ManyToOne
+    private Receipe idReceipe;
     @Id
-    @Column(name="Ingredients_idIngredients")
-    private Integer idIngredient;
-
-    @Id
-    @Column(length = 45,name="Unity_idUnity")
-    private String unity;
-
+    @ManyToOne
+    private Ingredient idIngredient;
+    @ManyToOne
+    private Unit unit;
     private float quantity;
 }
