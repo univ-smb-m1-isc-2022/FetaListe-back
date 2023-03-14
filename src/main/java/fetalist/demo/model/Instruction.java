@@ -22,6 +22,6 @@ public class Instruction {
     private String instruction;
 
     @ManyToOne
-    private Receipe idReceipe;
+    private Receipe receipe;
 
 }

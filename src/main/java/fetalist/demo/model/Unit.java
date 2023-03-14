@@ -20,4 +20,7 @@ public class Unit {
     @Column(length = 10)
     private String name;
 
+    public Unit(String unit) {
+        name = unit;
+    }
 }

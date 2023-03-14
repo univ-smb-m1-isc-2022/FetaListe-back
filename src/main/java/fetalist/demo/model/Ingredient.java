@@ -19,4 +19,7 @@ public class Ingredient {
     private Long idIngredient;
     private String name;
 
+    public Ingredient(String name) {
+        this.name = name;
+    }
 }
