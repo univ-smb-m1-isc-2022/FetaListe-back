@@ -36,4 +36,7 @@ public class Token {
     private String provider;
 
 
+    public Token(Users idUser) {
+        this.idUsers = idUser;
+    }
 }

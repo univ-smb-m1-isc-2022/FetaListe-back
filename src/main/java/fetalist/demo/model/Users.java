@@ -29,4 +29,9 @@ public class Users {
     @Column (length = 15)
     private String phone;
     private Date registerDate;
+
+    public Users(String name, String password) {
+        this.name = name;
+        this.password = password;
+    }
 }
