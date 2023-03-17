@@ -8,5 +8,4 @@ public interface ReceipeService {
     Receipe createReceipe(Receipe receipe);
     List<Receipe> getAllReceipe();
     Receipe getReceipeById(Long id);
-    void fillDatabaseWithJson();
 }

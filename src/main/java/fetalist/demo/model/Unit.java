@@ -17,7 +17,7 @@ public class Unit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idUnit;
-    @Column(length = 10)
+    @Column(length = 20)
     private String name;
 
     public Unit(String unit) {

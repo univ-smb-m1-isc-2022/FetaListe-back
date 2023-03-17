@@ -19,7 +19,7 @@ public class Token {
     private Long idToken;
 
     @OneToOne
-    private User idUser;
+    private Users idUsers;
 
     @Column(length=50)
     private String accessToken;

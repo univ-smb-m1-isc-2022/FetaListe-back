@@ -18,8 +18,8 @@ public class ShoppingList {
     @Id
     private Long idShoppingList;
     @ManyToOne
-    private User idUser;
+    private Users idUsers;
     @ManyToOne
-    private User idOwner;
+    private Users idOwner;
     private Date maxBuyDate;
 }

@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor // constructor with no args
 @Entity
 @Table
+@IdClass(ReceipeIngredientId.class)
 public class ReceipeIngredient
 {
     @Id
@@ -23,5 +24,7 @@ public class ReceipeIngredient
     private Ingredient idIngredient;
     @ManyToOne
     private Unit unit;
-    private float quantity;
+    private Double quantity;
 }
+
+

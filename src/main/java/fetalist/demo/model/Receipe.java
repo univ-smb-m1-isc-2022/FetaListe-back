@@ -18,11 +18,11 @@ public class Receipe {
     private Long id;
     @ManyToOne
     private Category category;
-    @Column(length = 100)
+    @Column(length = 500)
     private String name;
     @Column(length = 500)
     private String image;
-    private float rating;
-    private int estimatedTime;
+    private double rating;
+    private Long estimatedTime;
 
 }

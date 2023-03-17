@@ -15,7 +15,7 @@ import java.util.Date;
 @NoArgsConstructor // constructor with no args
 @Entity
 @Table
-public class User {
+public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idUser;

@@ -31,8 +31,4 @@ public class ReceipeController {
         return receipeService.getReceipeById(id);
     }
 
-    @PostMapping("/fillDatabase")
-    public void fillDatabaseWithJson() {
-        receipeService.fillDatabaseWithJson();
-    }
 }
