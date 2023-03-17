@@ -33,5 +33,5 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: docker.pkg.github.com
-          repository: univ-smb-m1-isc-2022/FetaListe-back/master
+          repository: univ-smb-m1-isc-2022/fetaliste-back/master
           tags: latest
