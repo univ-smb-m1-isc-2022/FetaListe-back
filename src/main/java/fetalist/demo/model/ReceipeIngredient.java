@@ -18,10 +18,10 @@ public class ReceipeIngredient
 {
     @Id
     @ManyToOne
-    private Receipe idReceipe;
+    private Receipe receipe;
     @Id
     @ManyToOne
-    private Ingredient idIngredient;
+    private Ingredient ingredient;
     @ManyToOne
     private Unit unit;
     private Double quantity;
