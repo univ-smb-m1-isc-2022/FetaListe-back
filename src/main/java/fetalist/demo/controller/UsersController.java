@@ -1,14 +1,9 @@
 package fetalist.demo.controller;
 
-import fetalist.demo.model.Receipe;
 import fetalist.demo.model.Token;
-import fetalist.demo.model.Users;
-import fetalist.demo.service.ReceipeService;
 import fetalist.demo.service.UsersService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -20,12 +15,12 @@ public class UsersController {
     private UsersService usersService;
 
     @PostMapping("/register")
-    public Users registerUser(String provider, String name, String password, String phoneNumber) {
-        return usersService.registerUser(provider, name, password, phoneNumber);
+    public Token registerUser(String provider, String name, String password, String phoneNumber, String mail) {
+        return usersService.registerUser(provider, name, password, phoneNumber, mail);
     }
 
     @PostMapping("/login")
-    public Users loginUser(String name, String password) {
+    public Token loginUser(String name, String password) {
         return usersService.loginUser(name, password);
     }
 

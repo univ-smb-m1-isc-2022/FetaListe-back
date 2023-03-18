@@ -15,8 +15,8 @@ import lombok.NoArgsConstructor;
 public class ReceipeShoppingList {
     @Id
     @ManyToOne
-    private Receipe idReceipe;
+    private Receipe receipe;
     @Id
     @ManyToOne
-    private ShoppingList idShoppingList;
+    private ShoppingList shoppingList;
 }

@@ -4,12 +4,12 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class ReceipeIngredientId implements Serializable {
-    private Receipe idReceipe;
-    private Ingredient idIngredient;
+    private Receipe receipe;
+    private Ingredient ingredient;
     public ReceipeIngredientId() {}
-    public ReceipeIngredientId(Receipe idReceipe, Ingredient idIngredient) {
-        this.idReceipe = idReceipe;
-        this.idIngredient = idIngredient;
+    public ReceipeIngredientId(Receipe receipe, Ingredient ingredient) {
+        this.receipe = receipe;
+        this.ingredient = ingredient;
     }
 
     @Override
@@ -21,12 +21,12 @@ public class ReceipeIngredientId implements Serializable {
             return false;
         }
         ReceipeIngredientId pk = (ReceipeIngredientId) o;
-        return Objects.equals( idReceipe, pk.idReceipe ) &&
-                Objects.equals( idIngredient, pk.idIngredient );
+        return Objects.equals( receipe, pk.receipe ) &&
+                Objects.equals( ingredient, pk.ingredient );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash( idReceipe, idIngredient );
+        return Objects.hash( receipe, ingredient );
     }
 }
