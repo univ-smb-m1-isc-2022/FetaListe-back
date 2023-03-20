@@ -9,6 +9,8 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Service
@@ -20,7 +22,28 @@ public class UsersServiceImpl implements UsersService{
     @Override
     public Token registerUser(String provider, String name, String password, String phoneNumber, String mail) {
         if (!Objects.equals(provider, "LOCAL")) return null; // TODO Tant qu'on a pas l'oauth google, ca sert à rien
-        Users u = usersRepository.save(new Users(name, password, phoneNumber, mail));
+
+        // Check si l'info n'existe pas déjà en bdd
+        Users checkerDb = new Users();
+
+        // Pas de duplication du nom
+        checkerDb.setName(name);
+        Users u = usersRepository.findBy(Example.of(checkerDb), FluentQuery.FetchableFluentQuery::first).orElse(null);
+        if (u != null) return null;
+        checkerDb.setName(null);
+
+        // Pas de duplication du mail
+        checkerDb.setMail(mail);
+        u = usersRepository.findBy(Example.of(checkerDb), FluentQuery.FetchableFluentQuery::first).orElse(null);
+        if (u != null) return null;
+        checkerDb.setMail(null);
+
+        // Pas de duplication du numéro de téléphone
+        checkerDb.setPhone(phoneNumber);
+        u = usersRepository.findBy(Example.of(checkerDb), FluentQuery.FetchableFluentQuery::first).orElse(null);
+        if (u != null) return null;
+
+        u = usersRepository.save(new Users(name, password, phoneNumber, mail, Date.valueOf(LocalDate.now())));
         return tokenRepository.save(Token.generateToken(u, provider));
     }
 

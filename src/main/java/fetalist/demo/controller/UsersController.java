@@ -1,8 +1,13 @@
 package fetalist.demo.controller;
 
+import fetalist.demo.bodies.UserLoginBody;
+import fetalist.demo.bodies.UserRegisterBody;
+import fetalist.demo.bodies.UserRemoveBody;
 import fetalist.demo.model.Token;
 import fetalist.demo.service.UsersService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,18 +20,20 @@ public class UsersController {
     private UsersService usersService;
 
     @PostMapping("/register")
-    public Token registerUser(String provider, String name, String password, String phoneNumber, String mail) {
-        return usersService.registerUser(provider, name, password, phoneNumber, mail);
+    public ResponseEntity<Token> registerUser(@RequestBody UserRegisterBody body) {
+        Token t = usersService.registerUser(body.getProvider(), body.getName(), body.getPassword(), body.getPhoneNumber(), body.getMail());
+        return t == null ? new ResponseEntity<>(HttpStatusCode.valueOf(400)) : ResponseEntity.ok(t);
     }
 
     @PostMapping("/login")
-    public Token loginUser(String name, String password) {
-        return usersService.loginUser(name, password);
+    public ResponseEntity<Token> loginUser(@RequestBody UserLoginBody body) {
+        Token t = usersService.loginUser(body.getName(), body.getPassword());
+        return t == null ? (ResponseEntity<Token>) ResponseEntity.badRequest() : ResponseEntity.ok(t);
     }
 
     @DeleteMapping("/remove")
-    public boolean deleteUser(Token t, String password) {
-        return usersService.deleteUser(t, password);
+    public ResponseEntity<Boolean> deleteUser(@RequestBody UserRemoveBody body) {
+        return usersService.deleteUser(body.getToken(), body.getPassword()) ? (ResponseEntity<Boolean>) ResponseEntity.badRequest() : ResponseEntity.ok(true);
     }
 
 }
