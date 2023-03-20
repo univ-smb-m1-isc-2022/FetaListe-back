@@ -18,6 +18,7 @@ import java.util.Date;
 public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private Long idUser;
     @Column(length = 20)
     private String name;
@@ -28,6 +29,7 @@ public class Users {
     private String mail;
     @Column (length = 15)
     private String phone;
+
     private Date registerDate;
 
     public Users(String name, String password) {
@@ -35,10 +37,11 @@ public class Users {
         this.password = password;
     }
 
-    public Users(String name, String password, String phoneNumber, String mail) {
+    public Users(String name, String password, String phoneNumber, String mail, Date registerDate) {
         this.name = name;
         this.password = password;
         phone = phoneNumber;
         this.mail = mail;
+        this.registerDate = registerDate;
     }
 }

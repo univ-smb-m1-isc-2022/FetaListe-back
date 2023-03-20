@@ -1,5 +1,6 @@
 package fetalist.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,6 +20,8 @@ import java.util.Base64;
 @Table
 public class Token {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private Long idToken;
 
     @OneToOne
@@ -27,6 +30,7 @@ public class Token {
     @Column(length=50)
     private String accessToken;
 
+    @JsonIgnore
     private Date accessValidUntil;
 
     @Column(length=50)
@@ -36,6 +40,7 @@ public class Token {
     private String refreshValidToken;
 
     @Column(length=45)
+    @JsonIgnore
     private String provider;
 
     private static final SecureRandom secureRandom = new SecureRandom(); //threadsafe
@@ -60,7 +65,7 @@ public class Token {
      * Refresh la validité du token quand une nouvelle connexion par mot de passe est effectuée (validité = 7 jours)
      */
     public void refreshAccessValidUntil() {
-        accessValidUntil = (Date) Date.from(Instant.now().plusSeconds(7*24*60*60));
+        accessValidUntil = new Date(Date.from(Instant.now().plusSeconds(7*24*60*60)).getTime());
     }
 
     public static Token generateToken(Users u, String provider) {
