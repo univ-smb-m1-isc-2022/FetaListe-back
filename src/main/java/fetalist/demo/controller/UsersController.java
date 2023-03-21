@@ -28,12 +28,12 @@ public class UsersController {
     @PostMapping("/login")
     public ResponseEntity<Token> loginUser(@RequestBody UserLoginBody body) {
         Token t = usersService.loginUser(body.getName(), body.getPassword());
-        return t == null ? (ResponseEntity<Token>) ResponseEntity.badRequest() : ResponseEntity.ok(t);
+        return t == null ? new ResponseEntity<>(HttpStatusCode.valueOf(400)) : ResponseEntity.ok(t);
     }
 
     @DeleteMapping("/remove")
     public ResponseEntity<Boolean> deleteUser(@RequestBody UserRemoveBody body) {
-        return usersService.deleteUser(body.getToken(), body.getPassword()) ? (ResponseEntity<Boolean>) ResponseEntity.badRequest() : ResponseEntity.ok(true);
+        return usersService.deleteUser(body.getToken(), body.getPassword()) ? ResponseEntity.ok(true) : new ResponseEntity<>(HttpStatusCode.valueOf(400));
     }
 
 }
