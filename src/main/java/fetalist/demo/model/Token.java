@@ -1,12 +1,16 @@
 package fetalist.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.security.SecureRandom;
 import java.sql.Date;
+import java.time.Instant;
+import java.util.Base64;
 
 @Data // lombok, getter and setter
 @Builder // lombok design partern builder
@@ -16,14 +20,17 @@ import java.sql.Date;
 @Table
 public class Token {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private Long idToken;
 
     @OneToOne
-    private Users idUsers;
+    private Users users;
 
     @Column(length=50)
     private String accessToken;
 
+    @JsonIgnore
     private Date accessValidUntil;
 
     @Column(length=50)
@@ -33,7 +40,40 @@ public class Token {
     private String refreshValidToken;
 
     @Column(length=45)
+    @JsonIgnore
     private String provider;
 
+    private static final SecureRandom secureRandom = new SecureRandom(); //threadsafe
+    private static final Base64.Encoder base64Encoder = Base64.getUrlEncoder(); //threadsafe
 
+    public static String generateNewToken() {
+        byte[] randomBytes = new byte[24];
+        secureRandom.nextBytes(randomBytes);
+        return base64Encoder.encodeToString(randomBytes);
+    }
+
+    public Token(Users user) {
+        this.users = user;
+    }
+
+    public Token(Users u, String provider) {
+        this.users = u;
+        this.provider = provider;
+    }
+
+    /**
+     * Refresh la validité du token quand une nouvelle connexion par mot de passe est effectuée (validité = 7 jours)
+     */
+    public void refreshAccessValidUntil() {
+        accessValidUntil = new Date(Date.from(Instant.now().plusSeconds(7*24*60*60)).getTime());
+    }
+
+    public static Token generateToken(Users u, String provider) {
+        Token t = new Token(u, provider);
+        t.accessToken = generateNewToken();
+        t.refreshToken = generateNewToken();
+        t.refreshValidToken = generateNewToken();
+        t.refreshAccessValidUntil();
+        return t;
+    }
 }

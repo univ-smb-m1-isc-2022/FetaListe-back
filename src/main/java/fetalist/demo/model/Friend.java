@@ -15,11 +15,11 @@ import lombok.NoArgsConstructor;
 public class Friend {
     @Id
     @ManyToOne
-    private Users idUsers1;
+    private Users user1;
 
     @Id
     @ManyToOne
-    private Users idUsers2;
+    private Users user2;
 
     @Column(length=10)
     private String status;

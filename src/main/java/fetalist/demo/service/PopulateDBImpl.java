@@ -14,7 +14,6 @@ import org.springframework.util.ResourceUtils;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -30,8 +29,6 @@ public class PopulateDBImpl implements PopulateDBService{
     public void fillDatabaseWithJson() {
         if (receipeRepository.count() != 0) return;
         JSONParser jsonParser = new JSONParser();
-        System.out.println(System.getProperty("user.dir"));
-
         try
         {
             FileReader reader = new FileReader(ResourceUtils.getFile("classpath:recettesBase.json"));

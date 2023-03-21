@@ -16,10 +16,10 @@ public class ShoppingListIngredient {
 
     @Id
     @ManyToOne
-    private ShoppingList idShoppingList;
+    private ShoppingList shoppingList;
     @Id
     @ManyToOne
-    private Ingredient idIngredient;
+    private Ingredient ingredient;
     @ManyToOne
     private Unit unit;
 }
