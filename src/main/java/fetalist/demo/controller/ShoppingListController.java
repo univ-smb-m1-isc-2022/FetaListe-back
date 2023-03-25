@@ -29,7 +29,7 @@ public class ShoppingListController {
     public ResponseEntity<ShoppingList> createShoppingList(@RequestBody CreateShoppingListBody body) {
         Token t = tokenService.checkToken(body.getToken());
         if (t == null) return new ResponseEntity<>(HttpStatusCode.valueOf(403)); // Tout token invalide ou expiré est interdit
-        ShoppingList sl = shoppingListService.createListWithReceipe(t, body.getIdReceipe(), body.getMaxBuyDate());
+        ShoppingList sl = shoppingListService.createList(t);
         return sl == null ? new ResponseEntity<>(HttpStatusCode.valueOf(400)) : ResponseEntity.ok(sl);
     }
 
