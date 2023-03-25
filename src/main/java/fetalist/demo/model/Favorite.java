@@ -19,4 +19,8 @@ public class Favorite {
     @Id
     @ManyToOne
     private Receipe receipe;
+
+    public Favorite(Users users) {
+        this.users = users;
+    }
 }
