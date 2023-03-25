@@ -4,12 +4,11 @@ import fetalist.demo.model.ShoppingList;
 import fetalist.demo.model.ShoppingListIngredient;
 import fetalist.demo.model.Token;
 
-import java.util.Date;
 import java.util.List;
 
 public interface ShoppingListService {
 
-    ShoppingList createListWithReceipe(Token t, long idReceipe, Date maxBuyDate);
+    ShoppingList createList(Token t);
 
     List<ShoppingList> getListOf(Token t, long idShoppingList);
 

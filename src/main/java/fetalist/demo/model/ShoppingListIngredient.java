@@ -22,4 +22,5 @@ public class ShoppingListIngredient {
     private Ingredient ingredient;
     @ManyToOne
     private Unit unit;
+    private Double quantity;
 }
