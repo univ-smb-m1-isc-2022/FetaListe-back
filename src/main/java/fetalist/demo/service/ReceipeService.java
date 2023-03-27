@@ -3,9 +3,10 @@ package fetalist.demo.service;
 import fetalist.demo.model.Receipe;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ReceipeService {
     Receipe createReceipe(Receipe receipe);
     List<Receipe> getAllReceipe();
-    Receipe getReceipeById(Long id);
+    Optional<Receipe> getReceipeById(Long id);
 }

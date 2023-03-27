@@ -17,6 +17,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -34,8 +35,8 @@ public class ReceipeServiceImpl implements ReceipeService{
     }
 
     @Override
-    public Receipe getReceipeById(Long id) {
-        return receipeRepository.findById(id).orElse(null);
+    public Optional<Receipe> getReceipeById(Long id) {
+        return receipeRepository.findById(id);
     }
 
 
