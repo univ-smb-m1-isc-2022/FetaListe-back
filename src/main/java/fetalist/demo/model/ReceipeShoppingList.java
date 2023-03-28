@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor // constructor with no args
 @Entity
 @Table
+@IdClass(ReceipeShoppingListId.class)
 public class ReceipeShoppingList {
     @Id
     @ManyToOne

@@ -38,7 +38,7 @@ public class ShoppingListController {
         // Si idList précisé : renvoyer que celle ci, sinon toutes les renvoyer
         Token t = tokenService.checkToken(body.getToken());
         if (t == null) return new ResponseEntity<>(HttpStatusCode.valueOf(403)); // Tout token invalide ou expiré est interdit
-        List<ShoppingList> sl = shoppingListService.getListOf(t, body.getIdShoppingList());
+        List<ShoppingList> sl = shoppingListService.getListOf(t, body.getIdShoppingList() == 0 ? -1 : body.getIdShoppingList());
         return sl == null ? new ResponseEntity<>(HttpStatusCode.valueOf(400)) : ResponseEntity.ok(sl);
     }
 
@@ -53,7 +53,7 @@ public class ShoppingListController {
         return editedSl == null ? new ResponseEntity<>(HttpStatusCode.valueOf(400)) : ResponseEntity.ok(editedSl);
     }
 
-    @DeleteMapping("/remove")
+    @PostMapping("/remove")
     public ResponseEntity<Boolean> deleteShoppingList(@RequestBody DeleteShoppingListBody body) {
         Token t = tokenService.checkToken(body.getToken());
         if (t == null) return new ResponseEntity<>(HttpStatusCode.valueOf(403)); // Tout token invalide ou expiré est interdit

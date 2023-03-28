@@ -21,14 +21,10 @@ public class ShoppingListServiceImpl implements ShoppingListService {
 
     @Override
     public ShoppingList createList(Token t) {
-        Users user = t.getUsers();
-        ShoppingList shoppingList = ShoppingList.builder()
-                .user(user)
-                .owner(user)
-                .build();
-
-        shoppingList = shoppingListRepository.save(shoppingList);
-        return shoppingList;
+        return shoppingListRepository.save(ShoppingList.builder()
+                .user(t.getUsers())
+                .owner(t.getUsers())
+                .build());
     }
 
     @Override
@@ -55,16 +51,12 @@ public class ShoppingListServiceImpl implements ShoppingListService {
                 continue;
             }
 
-            // Si la recette est déjà dans la liste, on la supprime pour la réajouter plus tard avec les modifications
+            ReceipeShoppingList rsl = new ReceipeShoppingList(receipe, shoppingList);
             ReceipeShoppingList receipeShoppingList = receipeShoppingListRepository.findBy(
-                    Example.of(new ReceipeShoppingList(receipe, shoppingList)),
+                    Example.of(rsl),
                     FluentQuery.FetchableFluentQuery::first).orElse(null);
             if (receipeShoppingList == null) {
-                ReceipeShoppingList newReceipeShoppingList = ReceipeShoppingList.builder()
-                        .receipe(receipe)
-                        .shoppingList(shoppingList)
-                        .build();
-                receipeShoppingListRepository.save(newReceipeShoppingList);
+                receipeShoppingListRepository.save(rsl);
             }
         }
 
@@ -99,15 +91,12 @@ public class ShoppingListServiceImpl implements ShoppingListService {
             if (receipe == null) {
                 continue;
             }
-
-            // Si la recette est déjà dans la liste, on la supprime pour la réajouter plus tard avec les modifications
             receipeShoppingListRepository.findBy(
                     Example.of(new ReceipeShoppingList(receipe, shoppingList)),
                     FluentQuery.FetchableFluentQuery::first).ifPresent(receipeShoppingList -> receipeShoppingListRepository.delete(receipeShoppingList));
         }
 
         for (ShoppingListIngredient si : editedIngredients) {
-            // Si la recette est déjà dans la liste, on la supprime pour la réajouter plus tard avec les modifications
             ShoppingListIngredient siInShoppingList = shoppingListIngredientRepository.findBy(
                     Example.of(ShoppingListIngredient.builder()
                             .ingredient(si.getIngredient())
