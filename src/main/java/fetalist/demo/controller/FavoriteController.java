@@ -39,10 +39,10 @@ public class FavoriteController {
         return ResponseEntity.ok(favoriteService.getAll(t));
     }
 
-    @DeleteMapping("/remove")
+    @PostMapping("/remove")
     public ResponseEntity<Boolean> deleteFavorite(@RequestBody FavoriteRemoveBody body) {
         Token t = tokenService.checkToken(body.getToken());
         if (t == null) return new ResponseEntity<>(HttpStatusCode.valueOf(403)); // Tout token invalide ou expiré est interdit
-        return favoriteService.deleteFavorite(body.getFavorite()) ? ResponseEntity.ok(true) : new ResponseEntity<>(HttpStatusCode.valueOf(400));
+        return favoriteService.deleteFavorite(t, body.getIdReceipe()) ? ResponseEntity.ok(true) : new ResponseEntity<>(HttpStatusCode.valueOf(400));
     }
 }

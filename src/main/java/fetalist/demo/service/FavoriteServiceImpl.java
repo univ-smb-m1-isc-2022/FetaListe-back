@@ -32,10 +32,12 @@ public class FavoriteServiceImpl implements FavoriteService {
     }
 
     @Override
-    public boolean deleteFavorite(Favorite favorite) {
-        Favorite f = favoriteRepository.findBy(Example.of(favorite), FluentQuery.FetchableFluentQuery::first).orElse(null);
+    public boolean deleteFavorite(Token t, long idReceipe) {
+        Receipe r = receipeRepository.findById(idReceipe).orElse(null);
+        if (r == null) return false;
+        Favorite f = favoriteRepository.findBy(Example.of(Favorite.builder().users(t.getUsers()).receipe(r).build()), FluentQuery.FetchableFluentQuery::first).orElse(null);
         if (f == null) return false;
-        favoriteRepository.delete(favorite);
+        favoriteRepository.delete(f);
         return true;
     }
 }
