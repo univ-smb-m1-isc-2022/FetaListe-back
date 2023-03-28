@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor // constructor with no args
 @Entity
 @Table
+@IdClass(ShoppingListIngredientId.class)
 public class ShoppingListIngredient {
 
     @Id
