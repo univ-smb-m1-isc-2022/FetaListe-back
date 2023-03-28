@@ -16,7 +16,8 @@ import java.util.Date;
 @Table
 public class ShoppingList {
     @Id
-    private Long idShoppingList;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @ManyToOne
     private Users user;
     @ManyToOne
