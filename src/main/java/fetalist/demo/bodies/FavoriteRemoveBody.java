@@ -1,5 +1,5 @@
 package fetalist.demo.bodies;
-import fetalist.demo.model.Favorite;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FavoriteRemoveBody {
     private String token;
-    private Favorite favorite;
+    private long idReceipe;
 }

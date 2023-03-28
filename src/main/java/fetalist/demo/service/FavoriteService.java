@@ -11,5 +11,5 @@ public interface FavoriteService {
 
     List<Favorite> getAll(Token t);
 
-    boolean deleteFavorite(Favorite favorite);
+    boolean deleteFavorite(Token t, long idReceipe);
 }
