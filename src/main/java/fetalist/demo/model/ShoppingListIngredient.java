@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor // constructor with no args
 @Entity
 @Table
+@IdClass(ShoppingListIngredientId.class)
 public class ShoppingListIngredient {
 
     @Id
@@ -22,4 +23,5 @@ public class ShoppingListIngredient {
     private Ingredient ingredient;
     @ManyToOne
     private Unit unit;
+    private Double quantity;
 }

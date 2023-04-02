@@ -16,10 +16,15 @@ import java.util.Date;
 @Table
 public class ShoppingList {
     @Id
-    private Long idShoppingList;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @ManyToOne
     private Users user;
     @ManyToOne
     private Users owner;
     private Date maxBuyDate;
+
+    public ShoppingList(Users user) {
+        this.user=user;
+    }
 }

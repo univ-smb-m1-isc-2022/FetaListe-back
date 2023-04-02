@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class FavoriteRemoveBody {
+public class CreateShoppingListBody {
     private String token;
-    private long idReceipe;
 }

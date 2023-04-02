@@ -31,7 +31,7 @@ public class UsersController {
         return t == null ? new ResponseEntity<>(HttpStatusCode.valueOf(400)) : ResponseEntity.ok(t);
     }
 
-    @DeleteMapping("/remove")
+    @PostMapping("/remove")
     public ResponseEntity<Boolean> deleteUser(@RequestBody UserRemoveBody body) {
         return usersService.deleteUser(body.getToken(), body.getPassword()) ? ResponseEntity.ok(true) : new ResponseEntity<>(HttpStatusCode.valueOf(400));
     }
