@@ -2,18 +2,15 @@ package fetalist.demo.service;
 
 import fetalist.demo.bodies.CompleteReceipeResponse;
 import fetalist.demo.bodies.CreateReceipeBody;
-import fetalist.demo.model.Category;
-import fetalist.demo.model.Instruction;
-import fetalist.demo.model.Receipe;
-import fetalist.demo.model.ReceipeIngredient;
+import fetalist.demo.model.*;
 import fetalist.demo.repository.*;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Example;
 import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -60,6 +57,40 @@ public class ReceipeServiceImpl implements ReceipeService{
     public CompleteReceipeResponse getReceipeById(Long id) {
         Receipe r = receipeRepository.findById(id).orElse(null);
         return r == null ? null : getCompleteReceipeById(r.getId());
+    }
+
+    @Override
+    public List<Receipe> searchReceipe(String name, List<Long> ingredientIds) {
+        List<Receipe> receipes = receipeRepository.findAll();
+
+        if (name != null) {
+            List<Receipe> results = new ArrayList<>();
+            for (Receipe receipe : receipes) {
+                if (receipe.getName().toLowerCase().contains(name.toLowerCase())) {
+                    results.add(receipe);
+                }
+            }
+            receipes = List.copyOf(results);
+        }
+
+        if (ingredientIds != null) {
+            List<Receipe> results = new ArrayList<>();
+            Set<Long> searchIngredientIds = new HashSet<>(ingredientIds);
+            for (Receipe receipe : receipes) {
+                Set<Long> receipeIngredientIds = receipeIngredientRepository.findAll(Example.of(ReceipeIngredient.builder().receipe(receipe).build()))
+                        .stream().map(ReceipeIngredient::getIngredient)
+                        .map(Ingredient::getIdIngredient)
+                        .collect(Collectors.toSet());
+
+                if (!Collections.disjoint(receipeIngredientIds, searchIngredientIds)) {
+                    results.add(receipe);
+                }
+
+            }
+            receipes = List.copyOf(results);
+        }
+
+        return receipes;
     }
 
 

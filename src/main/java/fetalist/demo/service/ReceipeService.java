@@ -10,4 +10,6 @@ public interface ReceipeService {
     boolean createReceipe(CreateReceipeBody body);
     List<Receipe> getAllReceipe();
     CompleteReceipeResponse getReceipeById(Long id);
+
+    List<Receipe> searchReceipe(String name, List<Long> ingredientIds);
 }
