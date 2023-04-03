@@ -1,6 +1,5 @@
 package fetalist.demo.bodies;
 
-import fetalist.demo.model.ShoppingListIngredient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,5 +16,5 @@ public class EditShoppingListBody {
     private long idShoppingList;
     private boolean add;
     private List<Long> idsReceipes;
-    private List<ShoppingListIngredient> editedIngredients;
+    private long nbPersonnes;
 }
