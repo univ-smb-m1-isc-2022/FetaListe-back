@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/user")
 @AllArgsConstructor
-@CrossOrigin(origins = "*")
 public class UsersController {
 
 
