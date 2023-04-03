@@ -1,5 +1,6 @@
 package fetalist.demo.service;
 
+import fetalist.demo.bodies.CompleteShoppingListResponse;
 import fetalist.demo.model.*;
 import fetalist.demo.repository.*;
 import lombok.AllArgsConstructor;
@@ -7,6 +8,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -18,6 +20,14 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     private ShoppingListRepository shoppingListRepository;
     private ShoppingListIngredientRepository shoppingListIngredientRepository;
     private ReceipeShoppingListRepository receipeShoppingListRepository;
+    private ReceipeIngredientRepository receipeIngredientRepository;
+
+    private CompleteShoppingListResponse createSLById(long id) {
+        ShoppingList s = shoppingListRepository.findById(id).orElse(null);
+        return CompleteShoppingListResponse.builder().sl(s)
+                .sli(shoppingListIngredientRepository.findAll(Example.of(ShoppingListIngredient.builder().shoppingList(s).build())))
+                .rsl(receipeShoppingListRepository.findAll(Example.of(ReceipeShoppingList.builder().shoppingList(s).build()))).build();
+    }
 
     @Override
     public ShoppingList createList(Token t) {
@@ -28,15 +38,21 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     }
 
     @Override
-    public List<ShoppingList> getListOf(Token t, long idShoppingList) {
+    public List<CompleteShoppingListResponse> getListOf(Token t, long idShoppingList) {
         Users user = t.getUsers();
-        if (idShoppingList == -1) return shoppingListRepository.findAll(Example.of(new ShoppingList(user)));
-        ShoppingList s = shoppingListRepository.findById(idShoppingList).orElse(null);
-        return s == null || !Objects.equals(s.getUser().getIdUser(), t.getUsers().getIdUser()) ? null : List.of(s);
+        if (idShoppingList != -1) {
+            ShoppingList s = shoppingListRepository.findById(idShoppingList).orElse(null);
+            if (s == null || !Objects.equals(s.getUser().getIdUser(), t.getUsers().getIdUser())) return null;
+            return List.of(createSLById(s.getId()));
+        }
+        List<ShoppingList> sls = shoppingListRepository.findAll(Example.of(new ShoppingList(user)));
+        List<CompleteShoppingListResponse> cslrl = new ArrayList<>();
+        sls.forEach(s -> cslrl.add(createSLById(s.getId())));
+        return cslrl;
     }
 
     @Override
-    public ShoppingList addToList(Token t, long idShoppingList, List<Long> idsReceipes, List<ShoppingListIngredient> editedIngredients) {
+    public CompleteShoppingListResponse addToList(Token t, long idShoppingList, List<Long> idsReceipes, long nbPersonnes) {
         // Récupération de la liste de course
         ShoppingList shoppingList = shoppingListRepository.findById(idShoppingList).orElse(null);
         if (shoppingList == null || !shoppingList.getUser().getIdUser().equals(t.getUsers().getIdUser())) {
@@ -58,27 +74,28 @@ public class ShoppingListServiceImpl implements ShoppingListService {
             if (receipeShoppingList == null) {
                 receipeShoppingListRepository.save(rsl);
             }
-        }
 
-        for (ShoppingListIngredient si : editedIngredients) {
-            // Si la recette est déjà dans la liste, on la supprime pour la réajouter plus tard avec les modifications
-            ShoppingListIngredient siInShoppingList = shoppingListIngredientRepository.findBy(
-                    Example.of(ShoppingListIngredient.builder()
-                            .ingredient(si.getIngredient())
-                            .build()),FluentQuery.FetchableFluentQuery::first).orElse(null);
-            siInShoppingList = ShoppingListIngredient.builder()
-                    .shoppingList(shoppingList)
-                    .unit(si.getUnit())
-                    .ingredient(si.getIngredient())
-                    .quantity(si.getQuantity() + (siInShoppingList == null ? 0 : siInShoppingList.getQuantity()))
-                    .build();
-            shoppingListIngredientRepository.save(siInShoppingList);
+            List<ReceipeIngredient> ril = receipeIngredientRepository.findAll(Example.of(ReceipeIngredient.builder().receipe(receipe).build()));
+            ril.forEach(ri -> {
+                ShoppingListIngredient siInShoppingList = shoppingListIngredientRepository.findBy(
+                        Example.of(ShoppingListIngredient.builder()
+                                .ingredient(ri.getIngredient())
+                                .build()),FluentQuery.FetchableFluentQuery::first).orElse(null);
+                siInShoppingList = ShoppingListIngredient.builder()
+                        .shoppingList(shoppingList)
+                        .unit(ri.getUnit())
+                        .ingredient(ri.getIngredient())
+                        .quantity(ri.getQuantity()*nbPersonnes + (siInShoppingList == null ? 0 : siInShoppingList.getQuantity()))
+                        .build();
+                shoppingListIngredientRepository.save(siInShoppingList);
+            });
+
         }
-        return shoppingList;
+        return createSLById(shoppingList.getId());
     }
 
     @Override
-    public ShoppingList removeFromList(Token t, long idShoppingList, List<Long> idsReceipes, List<ShoppingListIngredient> editedIngredients) {
+    public CompleteShoppingListResponse removeFromList(Token t, long idShoppingList, List<Long> idsReceipes, long nbPersonnes) {
         // Récupération de la liste de course
         ShoppingList shoppingList = shoppingListRepository.findById(idShoppingList).orElse(null);
         if (shoppingList == null || !shoppingList.getUser().getIdUser().equals(t.getUsers().getIdUser())) {
@@ -93,20 +110,22 @@ public class ShoppingListServiceImpl implements ShoppingListService {
             }
             receipeShoppingListRepository.findBy(
                     Example.of(new ReceipeShoppingList(receipe, shoppingList)),
-                    FluentQuery.FetchableFluentQuery::first).ifPresent(receipeShoppingList -> receipeShoppingListRepository.delete(receipeShoppingList));
-        }
+                    FluentQuery.FetchableFluentQuery::first)
+                    .ifPresent(receipeShoppingList -> receipeShoppingListRepository.delete(receipeShoppingList));
 
-        for (ShoppingListIngredient si : editedIngredients) {
-            ShoppingListIngredient siInShoppingList = shoppingListIngredientRepository.findBy(
-                    Example.of(ShoppingListIngredient.builder()
-                            .ingredient(si.getIngredient())
-                            .build()),FluentQuery.FetchableFluentQuery::first).orElse(null);
-            if (siInShoppingList == null) continue;
-            siInShoppingList.setQuantity(si.getQuantity() - siInShoppingList.getQuantity());
-            if (siInShoppingList.getQuantity() == 0) shoppingListIngredientRepository.delete(siInShoppingList);
-            else shoppingListIngredientRepository.save(siInShoppingList);
+            List<ReceipeIngredient> ril = receipeIngredientRepository.findAll(Example.of(ReceipeIngredient.builder().receipe(receipe).build()));
+            ril.forEach(ri -> {
+                ShoppingListIngredient siInShoppingList = shoppingListIngredientRepository.findBy(
+                        Example.of(ShoppingListIngredient.builder()
+                                .ingredient(ri.getIngredient())
+                                .build()),FluentQuery.FetchableFluentQuery::first).orElse(null);
+                if (siInShoppingList == null) return;
+                siInShoppingList.setQuantity(siInShoppingList.getQuantity() - ri.getQuantity()*nbPersonnes);
+                if (siInShoppingList.getQuantity() == 0) shoppingListIngredientRepository.delete(siInShoppingList);
+                else shoppingListIngredientRepository.save(siInShoppingList);
+            });
         }
-        return shoppingListRepository.save(shoppingList);
+        return createSLById(shoppingListRepository.save(shoppingList).getId());
     }
 
     @Override
