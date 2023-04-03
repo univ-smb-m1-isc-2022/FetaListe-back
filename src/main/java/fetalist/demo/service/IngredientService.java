@@ -7,4 +7,6 @@ import java.util.List;
 public interface IngredientService {
     Ingredient createIngredient(String ingName);
     List<Ingredient> getAllIngredients();
+
+    List<Ingredient> searchIngredient(String name);
 }

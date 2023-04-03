@@ -3,9 +3,8 @@ package fetalist.demo.controller;
 import fetalist.demo.model.Ingredient;
 import fetalist.demo.service.IngredientService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,5 +24,15 @@ public class IngredientController {
     @PostMapping("/getAll")
     public List<Ingredient> getAllIngredients() {
         return ingredientService.getAllIngredients();
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Ingredient>> searchReceipe(@RequestParam String name) {
+        List<Ingredient> ing = ingredientService.searchIngredient(name);
+        if (ing == null || ing.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(ing);
+        }
     }
 }
