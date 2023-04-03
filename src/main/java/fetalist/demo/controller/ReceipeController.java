@@ -2,6 +2,7 @@ package fetalist.demo.controller;
 
 import fetalist.demo.bodies.CompleteReceipeResponse;
 import fetalist.demo.bodies.CreateReceipeBody;
+import fetalist.demo.model.Receipe;
 import fetalist.demo.service.ReceipeService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class ReceipeController {
     }
 
     @GetMapping("/getAll")
-    public List<CompleteReceipeResponse> getAllReceipe() {
+    public List<Receipe> getAllReceipe() {
         return receipeService.getAllReceipe();
     }
 
