@@ -1,12 +1,12 @@
 package fetalist.demo.service;
 
-import fetalist.demo.model.Receipe;
+import fetalist.demo.bodies.CompleteReceipeResponse;
+import fetalist.demo.bodies.CreateReceipeBody;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ReceipeService {
-    Receipe createReceipe(Receipe receipe);
-    List<Receipe> getAllReceipe();
-    Optional<Receipe> getReceipeById(Long id);
+    boolean createReceipe(CreateReceipeBody body);
+    List<CompleteReceipeResponse> getAllReceipe();
+    CompleteReceipeResponse getReceipeById(Long id);
 }

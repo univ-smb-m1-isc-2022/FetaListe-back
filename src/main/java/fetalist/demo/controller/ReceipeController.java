@@ -1,16 +1,13 @@
 package fetalist.demo.controller;
 
-import fetalist.demo.bodies.UserRegisterBody;
-import fetalist.demo.model.Receipe;
-import fetalist.demo.model.Token;
+import fetalist.demo.bodies.CompleteReceipeResponse;
+import fetalist.demo.bodies.CreateReceipeBody;
 import fetalist.demo.service.ReceipeService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/receipe")
@@ -22,11 +19,11 @@ public class ReceipeController {
     private ReceipeService receipeService;
 
     @PostMapping("/create")
-    public ResponseEntity<Receipe> createReceipe(Receipe receipe) {
+    public ResponseEntity<Boolean> createReceipe(@RequestBody CreateReceipeBody body) {
 
         try {
-            Receipe newReceipe= receipeService.createReceipe(receipe);
-            return ResponseEntity.ok(newReceipe);
+            boolean hasBeenCreated = receipeService.createReceipe(body);
+            return ResponseEntity.ok(hasBeenCreated);
         }catch (Exception e ){
             return ResponseEntity.badRequest().build();
         }
@@ -34,19 +31,19 @@ public class ReceipeController {
     }
 
     @GetMapping("/getAll")
-    public List<Receipe> getAllReceipe() {
+    public List<CompleteReceipeResponse> getAllReceipe() {
         return receipeService.getAllReceipe();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Receipe> getReceipeById(@PathVariable Long id) {
+    public ResponseEntity<CompleteReceipeResponse> getReceipeById(@PathVariable Long id) {
 
-        Optional<Receipe> receipe = this.receipeService.getReceipeById(id);
+        CompleteReceipeResponse receipe = receipeService.getReceipeById(id);
 
-        if (receipe.isEmpty()) {
+        if (receipe == null) {
             return ResponseEntity.notFound().build();
         } else {
-            return ResponseEntity.ok(receipe.get());
+            return ResponseEntity.ok(receipe);
         }
 
 
