@@ -25,7 +25,7 @@ public class ReceipeServiceImpl implements ReceipeService{
     private CategoryRepository categoryRepository;
 
 
-    private CompleteReceipeResponse getReceipeById(long id) {
+    private CompleteReceipeResponse getCompleteReceipeById(long id) {
         return CompleteReceipeResponse.builder().receipe(receipeRepository.getReferenceById(id))
                 .instructions(instructionRepository.findAll(Example.of(Instruction.builder().receipe(receipeRepository.getReferenceById(id)).build())))
                 .ri(receipeIngredientRepository.findAll(Example.of(ReceipeIngredient.builder().receipe(receipeRepository.getReferenceById(id)).build()))).build();
@@ -55,14 +55,14 @@ public class ReceipeServiceImpl implements ReceipeService{
     public List<CompleteReceipeResponse> getAllReceipe() {
         List<Receipe> receipes = receipeRepository.findAll();
         List<CompleteReceipeResponse> crr = new ArrayList<>();
-        receipes.forEach(r -> crr.add(getReceipeById(r.getId())));
+        receipes.forEach(r -> crr.add(this.getCompleteReceipeById(r.getId())));
         return crr;
     }
 
     @Override
     public CompleteReceipeResponse getReceipeById(Long id) {
         Receipe r = receipeRepository.findById(id).orElse(null);
-        return r == null ? null : getReceipeById(r.getId());
+        return r == null ? null : getCompleteReceipeById(r.getId());
     }
 
 

@@ -18,7 +18,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/friend")
 @AllArgsConstructor
-@CrossOrigin(origins = "*")
 public class FriendController {
 
     private TokenService tokenService;

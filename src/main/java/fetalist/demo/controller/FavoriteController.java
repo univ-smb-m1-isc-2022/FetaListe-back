@@ -17,7 +17,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/favorite")
 @AllArgsConstructor
-@CrossOrigin(origins = "*")
 public class FavoriteController {
 
 
