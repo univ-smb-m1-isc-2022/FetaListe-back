@@ -52,11 +52,8 @@ public class ReceipeServiceImpl implements ReceipeService{
     }
 
     @Override
-    public List<CompleteReceipeResponse> getAllReceipe() {
-        List<Receipe> receipes = receipeRepository.findAll();
-        List<CompleteReceipeResponse> crr = new ArrayList<>();
-        receipes.forEach(r -> crr.add(this.getCompleteReceipeById(r.getId())));
-        return crr;
+    public List<Receipe> getAllReceipe() {
+        return receipeRepository.findAll();
     }
 
     @Override
