@@ -15,7 +15,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/shop")
 @AllArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200")
 public class ShoppingListController {
 
     private TokenService tokenService;
