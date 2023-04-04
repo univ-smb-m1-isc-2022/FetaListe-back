@@ -28,11 +28,10 @@ public class FavoriteController {
     private FavoriteService favoriteService;
 
     @PostMapping("/add")
-    public ResponseEntity<Favorite> addFavorite(@RequestBody FavoriteAddBody body) {
+    public ResponseEntity<Boolean> addFavorite(@RequestBody FavoriteAddBody body) {
         Token t = tokenService.checkToken(body.getToken());
         if (t == null) return new ResponseEntity<>(HttpStatusCode.valueOf(403)); // Tout token invalide ou expiré est interdit
-        Favorite fav = favoriteService.addFavorite(body.getIdReceipe(), t);
-        return fav == null ? new ResponseEntity<>(HttpStatusCode.valueOf(400)) : ResponseEntity.ok(fav);
+        return favoriteService.addFavorite(body.getIdReceipe(), t) ? new ResponseEntity<>(HttpStatusCode.valueOf(400)) : ResponseEntity.ok(true);
     }
 
     @PostMapping("/getAll")
