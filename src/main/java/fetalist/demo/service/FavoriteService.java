@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface FavoriteService {
 
-    Favorite addFavorite(long idReceipe, Token t);
+    boolean addFavorite(long idReceipe, Token t);
 
     List<Favorite> getAll(Token t);
 
