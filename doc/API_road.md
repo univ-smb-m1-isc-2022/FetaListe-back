@@ -519,34 +519,22 @@ status: 400
 ```
 
 </td></tr><tr><td>
-POST</td><td>/shop/add</td><td>Ajouter une recette à la liste de courses, et renvoie cette même liste</td><td>
+POST</td><td>/shop/create</td><td>Crée une nouvelle liste de courses</td><td>
 
 ```json
 {
-    String token,
-    Int idReceipe,
-    Date maxBuyDate,
+    "token": string,
 }
 ```
 </td><td>En cas de succès
 
 ```json
 status: 200
-data : {
-    String success = "Receipe added in shopping list",
-    Object shoppingList = [{
-        Int idShoppingList,
-        Date maxBuyDate,
-        Object receipes = [{
-            Int idReceipes,
-            String nameReceipe,
-        }],
-        Object ingredients = [{
-            String name,
-            Float quantity,
-            String unity,
-        }],
-    }],
+{
+    "id": string,
+    "user": User,
+    "owner": User,
+    "date": Date,
 }
 ```
 
@@ -554,89 +542,14 @@ En cas d’erreur
 
 ```json
 status: 400
-data : {
-  Object error,
-}
 ```
 
 </td></tr><tr><td>
-GET</td><td>/shop/ls/{token}</td><td>Voir mes listes de courses</td><td></td><td>En cas de succès
-
-```json
-status: 200
-data : {
-  String success = "List of all shopping list",
-  Object shoppingList = [{
-    Int idShoppingList,
-    Date maxBuyDate,
-    Object receipes = [{
-      Int idReceipes,
-      String nameReceipe,
-    }],
-    Object ingredients = [{
-      String name,
-      Float quantity,
-      String unity,
-    }],
-  }],
-}
-```
-
-En cas d’erreur
-
-```json
-status: 400
-data : {
-  Object error,
-}
-```
-
-</td></tr><tr><td>
-GET</td><td>/shop/{idShoppingList}/{token}</td><td>Voir le détail d’une liste de courses</td><td></td><td>En cas de succès
-
-```json
-status: 200
-data : {
-    String success = "Details of shopping list",
-    Object shoppingList = [{
-        Int idShoppingList,
-        Date maxBuyDate,
-        Object receipes = [{
-            Int idReceipes,
-            String nameReceipe,
-        }],
-        Object ingredients = [{
-            String name,
-            Float quantity,
-            String unity,
-        }],
-    }],
-}
-```
-En cas d’erreur
-
-```json
-status: 400
-data : {
-    Object error,
-}
-```
-
-</td></tr><tr><td>
-POST</td><td>/shop/edit</td><td>Modifier une liste de course et la renvoie</td><td>
+POST</td><td>/shop/getAll</td><td>Récupère mes listes de courses</td><td>
 
 ```json
 {
-    String token,
-    Int idShoppingList,
-    Bool add,
-    Object receipe = [{
-        Int idReceipe,
-    }],
-    Object ingredients = [{
-        Int idIngredient,
-        Float quantity,
-    }],
+  "token": string
 }
 ```
 
@@ -644,42 +557,48 @@ POST</td><td>/shop/edit</td><td>Modifier une liste de course et la renvoie</td><
 
 ```json
 status: 200
-data : {
-    String success = "shopping list updated",
-    Object shoppingList = [{
-        Int idShoppingList,
-        Date maxBuyDate,
-        Object receipes = [{
-            Int idReceipes,
-            String nameReceipe,
-        }],
-        Object ingredients = [{
-            String name,
-            Float quantity,
-            String unity,
-        }],
-    }],
-}
+[{
+    "id": string,
+    "user": User,
+    "owner": User,
+    "date": Date,
+}]
 ```
 
-En cas d’erreur
+</td></tr><tr><td>
+POST</td><td>/shop/getById</td><td>Récupère une de mes listes de courses par ID</td><td>
 
 ```json
-status: 400
-data : {
-    Object error,
+{
+  "token": string,
+  "idShoppingList": int
 }
 ```
-</td></tr><tr><td>GET</td><td>/ingredients/ls</td><td>Récupère la liste des ingrédients</td><td></td><td>En cas de succès
+
+</td><td>En cas de succès
 
 ```json
 status: 200
-data : {
-    String success = "list of ingredients",
-    Object ingredients = [{
-        Int idIngredient,
-        String name,
+{
+    "sl": {
+        "id": string,
+        "user": User,
+        "owner": User,
+        "date": Date,
+    },
+    "rsl": [{
+        "receipe": Receipe,
+        "shoppingList": ShoppingList
     }],
+    "sli": [{
+        "shoppingList": ShoppingList,
+        "ingredient": Ingredient,
+        "unit": {
+            "id": int,
+            "name": string
+        },
+        "quantity": float
+    }]
 }
 ```
 
@@ -687,10 +606,79 @@ En cas d’erreur
 
 ```json
 status: 400
-data : {
-    Object error,
+```
+
+</td></tr><tr><td>
+POST</td><td>/shop/edit</td><td>Modifie une liste de courses (ajoute / supprime des recettes pour tant de personnes)</td><td>
+
+```json
+{
+  "token": string,
+  "idShoppingList": int,
+  "add": boolean,
+  "idsReceipes": [int],
+  "nbPersonnes": int
 }
 ```
+
+</td><td>En cas de succès
+
+```json
+status: 200
+{
+    "sl": {
+        "id": string,
+        "user": User,
+        "owner": User,
+        "date": Date,
+    },
+    "rsl": [{
+        "receipe": Receipe,
+        "shoppingList": ShoppingList
+    }],
+    "sli": [{
+        "shoppingList": ShoppingList,
+        "ingredient": Ingredient,
+        "unit": {
+            "id": int,
+            "name": string
+        },
+        "quantity": float
+    }]
+}
+```
+
+En cas d’erreur
+
+```json
+status: 400
+```
+
+</td></tr><tr><td>
+POST</td><td>/shop/remove</td><td>Supprime une de mes listes de courses</td><td>
+
+```json
+{
+  "token": string,
+  "idShoppingList": int
+}
+```
+
+</td><td>En cas de succès
+
+```json
+status: 200
+{
+    boolean: true
+}
+```
+
+En cas d’erreur
+
+```json
+status: 400
+```
+
 </td></tr><tr><td>
 GET</td><td>/unity/ls</td><td>Récupère la liste des unités</td><td></td><td>En cas de succès
 
