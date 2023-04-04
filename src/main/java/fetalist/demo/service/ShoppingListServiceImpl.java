@@ -8,6 +8,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,10 +30,11 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     }
 
     @Override
-    public ShoppingList createList(Token t) {
+    public ShoppingList createList(Token t, Date reminderDate) {
         return shoppingListRepository.save(ShoppingList.builder()
                 .user(t.getUsers())
                 .owner(t.getUsers())
+                .maxBuyDate(reminderDate)
                 .build());
     }
 
