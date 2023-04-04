@@ -29,7 +29,7 @@ public class FriendController {
         if (t == null) return new ResponseEntity<>(HttpStatusCode.valueOf(403)); // Tout token invalide ou expiré est interdit
         return friendService.requestFriend(body.getIdUserToAdd(), t) ? ResponseEntity.ok(true) : new ResponseEntity<>(HttpStatusCode.valueOf(400));
     }
-    @PostMapping("/list")
+    @PostMapping("/getAll")
     public ResponseEntity<List<Friend>> listFriend(@RequestBody ListFriendBody body) {
         Token t = tokenService.checkToken(body.getToken());
         if (t == null) return new ResponseEntity<>(HttpStatusCode.valueOf(403)); // Tout token invalide ou expiré est interdit

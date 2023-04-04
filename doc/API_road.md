@@ -393,12 +393,12 @@ status: 400
 ```
 
 </td></tr><tr><td>
-POST</td><td>/friend/add</td><td>Ajouter un amis</td><td>
+POST</td><td>/friend/add</td><td>Ajouter un ami</td><td>
 
 ```json
 {
-    String token,
-    Int idUser,
+  "token": string,
+  "idUserToAdd": string
 }
 ```
 
@@ -407,7 +407,7 @@ POST</td><td>/friend/add</td><td>Ajouter un amis</td><td>
 ```json
 status: 200
 data : {
-    String success = "friend request sended",
+    boolean: true
 }
 ```
 
@@ -415,45 +415,41 @@ En cas d’erreur
 
 ```json
 status: 400
-data : {
-    Object error,
-}
 ```
 
 </td></tr><tr><td>
-GET</td><td>/friend/ls/{token}</td><td>Voir tes amis</td><td></td><td>En cas de succès
-
-```json
-status: 200
-data : {
-    String success = "friend list",
-    Object friends = [{
-        Int idFriendship,
-        String status,
-        Object friend = [{
-            Int idUser,
-            String name,
-        }],
-    }],
-}
-```
-
-En cas d’erreur
-
-```json
-status: 400
-data : {
-    Object error,
-}
-```
-
-</td></tr><tr><td>
-POST</td><td>/friend/validate</td><td>Valider une demande en ami</td><td>
+POST</td><td>/friend/getAll</td><td>Voir tes amis</td><td>
 
 ```json
 {
-    String token,
-    Int idFriendship,
+  "token": string
+}
+```
+
+</td><td>En cas de succès
+
+```json
+status: 200
+[{
+    "user1": User,
+    "user2": User,
+    "status": "PENDING" | "ACCEPTED"
+}]
+```
+
+En cas d’erreur
+
+```json
+status: 400
+```
+
+</td></tr><tr><td>
+POST</td><td>/friend/validate</td><td>Valide une demande d'ami</td><td>
+
+```json
+{
+  "token": string,
+  "idFriendInviteToRespond": int
 }
 ```
 
@@ -462,7 +458,7 @@ POST</td><td>/friend/validate</td><td>Valider une demande en ami</td><td>
 ```json
 status: 200
 data : {
-    String success = "friendship validated",
+    boolean: true,
 }
 ```
 
@@ -470,18 +466,15 @@ En cas d’erreur
 
 ```json 
 status : 400
-data : {
-    Object error,
-}
 ```
 
 </td></tr><tr><td>
-POST</td><td>/friend/refuse</td><td>Refuser une demande en ami</td><td>
+POST</td><td>/friend/refuse</td><td>Refuse une demande d'ami</td><td>
 
 ```json
 {
-    String token,
-    Int idFriendship,
+  "token": string,
+  "idFriendInviteToRespond": int
 }
 ```
 
@@ -490,26 +483,23 @@ POST</td><td>/friend/refuse</td><td>Refuser une demande en ami</td><td>
 ```json
 status: 200
 data : {
-    String success = "friendship refused",
+    boolean: true,
 }
 ```
 
 En cas d’erreur
 
-```json
-status : 400 
-data : {
-    Object error,
-}
+```json 
+status : 400
 ```
 
 </td></tr><tr><td>
-DELETE</td><td>/friend</td><td>Supprimer un ami</td><td>
+POST</td><td>/friend/remove</td><td>Supprimer un ami</td><td>
 
 ```json
 {
-  String token,
-  Int idFriendship,
+  "token": string,
+  "idFriendToRemove": int
 }
 ```
 
@@ -518,7 +508,7 @@ DELETE</td><td>/friend</td><td>Supprimer un ami</td><td>
 ```json
 status: 200
 data : {
-  String success = "friendship deleted",
+  boolean: true,
 }
 ```
 
@@ -526,9 +516,6 @@ En cas d’erreur
 
 ```json
 status: 400
-data : {
-  Object error,
-}
 ```
 
 </td></tr><tr><td>
