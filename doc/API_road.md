@@ -519,52 +519,6 @@ status: 400
 ```
 
 </td></tr><tr><td>
-GET</td><td>/msg/send/{idShoppingList}/{token}</td><td>Envoyer liste de course par sms à toi même</td><td></td><td>En cas de succès
-
-```json
-status: 200
-data : {
-  String success = "shopping list sended",
-}
-```
-
-En cas d’erreur
-
-```json
-status: 400
-data : {
-  Object error,
-}
-```
-
-</td></tr><tr><td>
-POST</td><td>/msg/share</td><td>Partager liste de courses à un amis (via appli)</td><td>
-
-```json
-{
-  String token,
-  Int idShoppingList,
-  Int idFriend,
-}
-```
-</td><td>En cas de succès
-
-```json
-status: 200
-data : { {
-  String success = "shopping list sended to friend",
-}
-```
-En cas d’erreur
-
-```json
-status: 400
-data : { {
-  Object error,
-}
-```
-
-</td></tr><tr><td>
 POST</td><td>/shop/add</td><td>Ajouter une recette à la liste de courses, et renvoie cette même liste</td><td>
 
 ```json
@@ -771,5 +725,51 @@ Envoie un rappel pour liste de course (côté serveur uniquement, ce n’est pas
 ```
 
 </td><td>
-</tr>
+</tr><tr><td>
+GET</td><td>/msg/send/{idShoppingList}/{token}</td><td>Envoyer liste de course par sms à toi même</td><td></td><td>En cas de succès
+
+```json
+status: 200
+data : {
+  String success = "shopping list sended",
+}
+```
+
+En cas d’erreur
+
+```json
+status: 400
+data : {
+  Object error,
+}
+```
+
+</td></tr><tr><td>
+POST</td><td>/msg/share</td><td>Partager liste de courses à un amis (via appli)</td><td>
+
+```json
+{
+  String token,
+  Int idShoppingList,
+  Int idFriend,
+}
+```
+</td><td>En cas de succès
+
+```json
+status: 200
+data : { {
+  String success = "shopping list sended to friend",
+}
+```
+En cas d’erreur
+
+```json
+status: 400
+data : { {
+  Object error,
+}
+```
+
+</td></tr>
 </table>
