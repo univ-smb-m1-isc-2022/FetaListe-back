@@ -49,8 +49,12 @@ public class FriendServiceImpl implements FriendService {
         }
         Friend fr = friendRepository.findOne(Example.of(Friend.builder().user1(t.getUsers()).user2(userInvited).build())).orElse(null);
         if (fr == null || !Objects.equals(fr.getStatus(), "PENDING")) return false;
-        fr.setStatus(response ? "ACCEPTED" : "DECLINED");
-        friendRepository.save(fr);
+        if (response) {
+            fr.setStatus("ACCEPTED");
+            friendRepository.save(fr);
+        } else {
+            friendRepository.delete(fr);
+        }
         return true;
     }
 
