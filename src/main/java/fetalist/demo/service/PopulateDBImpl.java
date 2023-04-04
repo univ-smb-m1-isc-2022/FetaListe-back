@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
+import java.util.Objects;
 
 @Service
 @AllArgsConstructor
@@ -31,7 +33,7 @@ public class PopulateDBImpl implements PopulateDBService{
         try
         {
             InputStream in = resourceLoader.getResource("classpath:recettesBase.json").getInputStream();
-            JSONArray receipeList = new JSONObject(new JSONTokener(in)).getJSONArray("data");
+            JSONArray receipeList = new JSONArray(new JSONTokener(in));
             receipeList.forEach( rec -> parseReceipeObject( (JSONObject) rec ));
             return "OK";
         } catch (IOException e) {
@@ -51,8 +53,8 @@ public class PopulateDBImpl implements PopulateDBService{
         recette.setCategory(recetteC);
         recette.setName((String) receipe.get("name"));
         recette.setImage((String) receipe.get("image"));
-        recette.setRating((Double) receipe.get("rating"));
-        recette.setEstimatedTime((Long) receipe.get("estimated_time"));
+        recette.setRating(((BigDecimal)receipe.get("rating")).doubleValue());
+        recette.setEstimatedTime(((Integer) receipe.get("estimated_time")).longValue());
 
         recette = receipeRepository.save(recette);
 
@@ -77,11 +79,11 @@ public class PopulateDBImpl implements PopulateDBService{
         if (ingredient == null) {
             ingredient = ingredientRepository.save(exampleIng);
         }
-        Unit exampleUnit = new Unit((String) ing.get("unit"));
+        Unit exampleUnit = new Unit(Objects.equals(ing.get("unit").toString(), "null") ? "---" : ing.get("unit").toString());
         Unit unit = unitRepository.findBy(Example.of(exampleUnit), FluentQuery.FetchableFluentQuery::first).orElse(null);
         if (unit == null) {
             unit = unitRepository.save(exampleUnit);
         }
-        receipeIngredientRepository.save(new ReceipeIngredient(recette, ingredient, unit, (Double) ing.get("quantity")));
+        receipeIngredientRepository.save(new ReceipeIngredient(recette, ingredient, unit, ((BigDecimal) ing.get("quantity")).doubleValue()));
     }
 }
