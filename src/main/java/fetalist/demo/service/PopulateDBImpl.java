@@ -3,17 +3,16 @@ package fetalist.demo.service;
 import fetalist.demo.model.*;
 import fetalist.demo.repository.*;
 import lombok.AllArgsConstructor;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.domain.Example;
 import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 
 @Service
 @AllArgsConstructor
@@ -24,19 +23,18 @@ public class PopulateDBImpl implements PopulateDBService{
     private IngredientRepository ingredientRepository;
     private UnitRepository unitRepository;
     private ReceipeIngredientRepository receipeIngredientRepository;
+    private final ResourceLoader resourceLoader;
 
     @Override
     public String fillDatabaseWithJson() {
         if (receipeRepository.count() != 0) return "already filled";
-        JSONParser jsonParser = new JSONParser();
         try
         {
-            FileReader reader = new FileReader(ResourceUtils.getFile("classpath:recettesBase.json"));
-            Object obj = jsonParser.parse(reader);
-            JSONArray receipeList = (JSONArray) obj;
+            InputStream in = resourceLoader.getResource("classpath:recettesBase.json").getInputStream();
+            JSONArray receipeList = new JSONObject(new JSONTokener(in)).getJSONArray("data");
             receipeList.forEach( rec -> parseReceipeObject( (JSONObject) rec ));
             return "OK";
-        } catch (IOException | ParseException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             return "Error occured :\n".concat(e.toString());
         }
