@@ -1,3 +1,15 @@
+<h1>
+Routes APIs
+</h1>
+
+<div>
+Toutes les requêtes demandant un token renverront une erreur 403 si le token est :
+<ul><li>non rempli</li>
+<li>invalide</li>
+<li>expiré</li>
+</ul>
+</div>
+
 <table>
 <tr>
     <th>METHODE</th>
@@ -113,7 +125,7 @@ data : {
 ```
 
 </td></tr><tr><td>
-POST</td><td>/receipe/create</td><td>Créer une recette</td><td>
+POST</td><td>/receipe/create</td><td>Créer une recette (quantités pour une personne)</td><td>
 
 ```json
 {
@@ -176,7 +188,7 @@ data : {
 }
 ```
 </td></tr><tr><td>
-GET</td><td>/receipe/{id}</td><td>Récupère une recette par son ID</td></td><td><td>En cas de succès
+GET</td><td>/receipe/{id}</td><td>Récupère une recette par son ID</td><td><td>En cas de succès
 
 ```json
 status: 200
@@ -245,11 +257,11 @@ data : {
 ```
 
 </td></tr><tr><td>
-POST</td><td>/ingredient/create</td><td>Ajoute un ingrédient. Renvoie l’objet de la BDD correspondant (/!\ créer l’objet uniquement s’il n’existe pas)</td><td>
+POST</td><td>/ingredient/create</td><td>Crée un ingrédient.</td><td>
 
 ```json
 {
-    String nom,
+    "nom": string,
 }
 ```
 
@@ -258,11 +270,56 @@ POST</td><td>/ingredient/create</td><td>Ajoute un ingrédient. Renvoie l’objet
 ```json
 status: 200
 data : {
-    String success = "receipe created",
-    Object ingredient : [{
-        String name,
-        Int idIngredient,
-    }],
+    "id": string,
+    "name": string,
+}
+```
+</td></tr><tr><td>
+POST</td><td>/ingredient/getAll</td><td>Récupère tous les ingrédients.</td><td>
+</td><td>En cas de succès
+
+```json
+status: 200
+[{
+    "id": string,
+    "name": string,
+}]
+```
+</td></tr><tr><td>
+GET</td><td>/ingredient/search?name=[nomIngredient]</td><td>Recherche un ingrédient.</td><td>
+
+</td><td>En cas de succès
+
+```json
+status: 200
+[{
+    "id": string,
+    "name": string,
+}]
+```
+
+En cas d’erreur
+```json
+status: 404
+```
+
+</td></tr><tr><td>
+POST</td><td>/favorite/add/</td><td>Ajouter un favori</td><td>
+
+```json
+{
+    "token": string,
+    "idReceipe": int,
+}
+```
+
+</td><td>En cas de succès
+
+```json
+status: 200
+{
+    "users": User,
+    "receipe": Receipe,
 }
 ```
 
@@ -270,18 +327,34 @@ En cas d’erreur
 
 ```json
 status: 400
-data : {
-    Object error,
-}
 ```
 
 </td></tr><tr><td>
-POST</td><td>/favorite/add/</td><td>Ajouter un favoris</td><td>
+POST</td><td>/favorite/getAll</td><td>Voir mes favoris</td><td>
 
 ```json
 {
-    Int idReceipe,
-    Strring token,
+    "token": string
+}
+```
+
+</td><td>En cas de succès
+
+```json
+status: 200
+[{
+"users": User,
+"receipe": Receipe,
+}]
+```
+
+</td></tr><tr><td>
+POST</td><td>/favorite/remove</td><td>Supprimer un favori</td><td>
+
+```json
+{
+    "token": string,
+    "idReceipe": int,
 }
 ```
 
@@ -290,20 +363,7 @@ POST</td><td>/favorite/add/</td><td>Ajouter un favoris</td><td>
 ```json
 status: 200
 data : {
-    String success = "favorite aded",
-    Object receipes = [{
-        Int idReceipe,
-        String nameReceipe,
-        String imageReceipe,
-        Float rating,
-        Float estimatedTime,
-        String categoryName,
-        Object ingredients: [{
-            String ingredientName,
-            Float quantity,
-            String unity,
-        }],
-    }],
+    boolean: true,
 }
 ```
 
@@ -311,69 +371,6 @@ En cas d’erreur
 
 ```json
 status: 400
-data : {
-    Object error,
-}
-```
-
-</td></tr><tr><td>
-GET</td><td>/favorite/ls/{token}</td><td>Voir mes favoris</td><td></td><td>En cas de succès
-
-```json
-status: 200
-data : {
-    String success = "favorite aded",
-    Object receipes = [{
-        Int idReceipe,
-        String nameReceipe,
-        String imageReceipe,
-        Float rating,
-        Float estimatedTime,
-        String categoryName,
-        Object ingredients: [{
-            String ingredientName,
-            Float quantity,
-            String unity,
-        }],
-    }],
-}
-```
-
-En cas d’erreur
-
-```json
-status: 400
-data : {
-    Object error,
-}
-```
-
-</td></tr><tr><td>
-DELETE</td><td>/favorite</td><td>Supprimer un favoris</td><td>
-
-```json
-{
-    Int idFavorite,
-    String token,
-}
-```
-
-</td><td>En cas de succès
-
-```json
-status: 200
-data : {
-    String success = "favorite removed",
-}
-```
-
-En cas d’erreur
-
-```json
-status: 400
-data : {
-    Object error,
-}
 ```
 
 </td></tr><tr><td>
@@ -757,7 +754,7 @@ data : {
 }
 ```
 
-</td></tr><tr></td><td><td></td><td><span style="color:red">
+</td></tr><tr><td><td></td><td><span style="color:red">
 Envoie un rappel pour liste de course (côté serveur uniquement, ce n’est pas une route accessible)</span></td><td>
 
 ```json
