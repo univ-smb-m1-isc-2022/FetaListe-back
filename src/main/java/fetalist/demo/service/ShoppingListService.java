@@ -4,11 +4,12 @@ import fetalist.demo.bodies.CompleteShoppingListResponse;
 import fetalist.demo.model.ShoppingList;
 import fetalist.demo.model.Token;
 
+import java.util.Date;
 import java.util.List;
 
 public interface ShoppingListService {
 
-    ShoppingList createList(Token t);
+    ShoppingList createList(Token t, Date reminderDate);
 
     List<ShoppingList> getListOf(Token t);
     CompleteShoppingListResponse getListFromId(Token t, long id);
