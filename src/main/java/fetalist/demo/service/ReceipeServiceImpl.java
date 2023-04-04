@@ -20,6 +20,7 @@ public class ReceipeServiceImpl implements ReceipeService{
     private ReceipeIngredientRepository receipeIngredientRepository;
     private UnitRepository unitRepository;
     private CategoryRepository categoryRepository;
+    private IngredientService ingredientService;
 
 
     private CompleteReceipeResponse getCompleteReceipeById(long id) {
@@ -60,37 +61,32 @@ public class ReceipeServiceImpl implements ReceipeService{
     }
 
     @Override
-    public List<Receipe> searchReceipe(String name, List<Long> ingredientIds) {
+    public List<Receipe> searchReceipe(String name) {
         List<Receipe> receipes = receipeRepository.findAll();
 
-        if (name != null) {
-            List<Receipe> results = new ArrayList<>();
-            for (Receipe receipe : receipes) {
-                if (receipe.getName().toLowerCase().contains(name.toLowerCase())) {
-                    results.add(receipe);
-                }
-            }
-            receipes = List.copyOf(results);
+        if (name == null) {
+            return receipes;
         }
+        List<Receipe> results = new ArrayList<>();
+        Set<String> foundIngs = ingredientService.searchIngredient(name)
+                .stream().map(Ingredient::getName)
+                .collect(Collectors.toSet());
 
-        if (ingredientIds != null) {
-            List<Receipe> results = new ArrayList<>();
-            Set<Long> searchIngredientIds = new HashSet<>(ingredientIds);
-            for (Receipe receipe : receipes) {
-                Set<Long> receipeIngredientIds = receipeIngredientRepository.findAll(Example.of(ReceipeIngredient.builder().receipe(receipe).build()))
-                        .stream().map(ReceipeIngredient::getIngredient)
-                        .map(Ingredient::getIdIngredient)
-                        .collect(Collectors.toSet());
-
-                if (!Collections.disjoint(receipeIngredientIds, searchIngredientIds)) {
-                    results.add(receipe);
-                }
-
+        for (Receipe receipe : receipes) {
+            if (receipe.getName().toLowerCase().contains(name.toLowerCase())) {
+                results.add(receipe);
+                continue;
             }
-            receipes = List.copyOf(results);
-        }
+            Set<String> receipeIngredientIds = receipeIngredientRepository.findAll(Example.of(ReceipeIngredient.builder().receipe(receipe).build()))
+                    .stream().map(ReceipeIngredient::getIngredient)
+                    .map(Ingredient::getName)
+                    .collect(Collectors.toSet());
 
-        return receipes;
+            if (!Collections.disjoint(receipeIngredientIds, foundIngs)) {
+                results.add(receipe);
+            }
+        }
+        return results;
     }
 
 
