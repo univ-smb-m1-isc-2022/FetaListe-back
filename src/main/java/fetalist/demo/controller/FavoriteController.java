@@ -24,14 +24,14 @@ public class FavoriteController {
     private FavoriteService favoriteService;
 
     @PostMapping("/add")
-    public ResponseEntity<List<Favorite>> addFavorite(@RequestBody FavoriteAddBody body) {
+    public ResponseEntity<Favorite> addFavorite(@RequestBody FavoriteAddBody body) {
         Token t = tokenService.checkToken(body.getToken());
         if (t == null) return new ResponseEntity<>(HttpStatusCode.valueOf(403)); // Tout token invalide ou expiré est interdit
         Favorite fav = favoriteService.addFavorite(body.getIdReceipe(), t);
-        return fav == null ? new ResponseEntity<>(HttpStatusCode.valueOf(400)) : ResponseEntity.ok(favoriteService.getAll(t));
+        return fav == null ? new ResponseEntity<>(HttpStatusCode.valueOf(400)) : ResponseEntity.ok(fav);
     }
 
-    @PostMapping("/list")
+    @PostMapping("/getAll")
     public ResponseEntity<List<Favorite>> listFavoriteOfUser(@RequestBody FavoriteListBody body) {
         Token t = tokenService.checkToken(body.getToken());
         if (t == null) return new ResponseEntity<>(HttpStatusCode.valueOf(403)); // Tout token invalide ou expiré est interdit
