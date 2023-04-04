@@ -349,6 +349,25 @@ status: 200
 ```
 
 </td></tr><tr><td>
+POST</td><td>/favorite/isFavorite</td><td>Vérifie si une recette est en favori</td><td>
+
+```json
+{
+    "token": string,
+    "idReceipe": int,
+}
+```
+
+</td><td>En cas de succès
+
+```json
+status: 200
+data : {
+    boolean: doesReceipeExists,
+}
+```
+
+</td></tr><tr><td>
 POST</td><td>/favorite/remove</td><td>Supprimer un favori</td><td>
 
 ```json

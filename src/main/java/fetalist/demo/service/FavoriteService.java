@@ -12,4 +12,6 @@ public interface FavoriteService {
     List<Favorite> getAll(Token t);
 
     boolean deleteFavorite(Token t, long idReceipe);
+
+    boolean isAFavoriteOf(Token t, Long idReceipe);
 }

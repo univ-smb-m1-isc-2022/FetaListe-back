@@ -40,4 +40,10 @@ public class FavoriteServiceImpl implements FavoriteService {
         favoriteRepository.delete(f);
         return true;
     }
+
+    @Override
+    public boolean isAFavoriteOf(Token t, Long idReceipe) {
+        Receipe r = receipeRepository.findById(idReceipe).orElse(null);
+        return r != null && favoriteRepository.exists(Example.of(Favorite.builder().receipe(r).users(t.getUsers()).build()));
+    }
 }
