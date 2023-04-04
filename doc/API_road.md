@@ -6,7 +6,7 @@
     <th>INPUT</th>
     <th>OUTPUT</th>
 </tr>
-<tr><td>POST</td><td>/login</td><td>Connexion</td><td>Avec connexion OAuth2 = 
+<tr><td>POST</td><td>/user/login</td><td>Connexion</td><td>Avec connexion OAuth2 = 
 
 ```json
 {
@@ -18,8 +18,8 @@ Avec connexion Appli =
 
 ```json
 {
-    String name, 
-    String password,
+    "name": string,
+    "password": string,
 } 
 ```
 </td><td>En cas de succès
@@ -27,9 +27,8 @@ Avec connexion Appli =
 ```json
 status: 200
 data : {
-    String success = "user connected",
-    String token,
-    String name,
+    "accessToken": string,
+    "user": User,
 }
 ```
 
@@ -43,7 +42,7 @@ data : {
 ```
 
 </td></tr>
-<tr><td>POST</td><td>/register</td><td>Inscription</td><td>Avec connexion OAuth2 = 
+<tr><td>POST</td><td>/user/register</td><td>Inscription</td><td>Avec connexion OAuth2 = 
 
 ```json
 {
@@ -56,10 +55,11 @@ Avec connexion Appli =
 
 ```json
 {
-    String provider = FetaList
-    String name,
-    String password,
-    String phoneNumber,
+  "provider": string = LOCAL,
+  "name":  string,
+  "password": string,
+  "phoneNumber": string,
+  "mail": string
 }
 ```
 
@@ -84,12 +84,12 @@ data : {
 ```
 
 </td></tr><tr><td>
-DELETE </td><td> /user</td><td>Supprimer compte</td><td>
+POST </td><td> /user/remove</td><td>Supprimer compte</td><td>
 
 ```json
 {
-    String token,
-    String password,
+    "token": string,
+    "password": string,
 }
 ```
 
@@ -99,7 +99,7 @@ En cas de succès
 ```json
 status: 200
 data : {
-    String success = "user deleted",
+    boolean: true,
 }
 ```
 
@@ -113,11 +113,26 @@ data : {
 ```
 
 </td></tr><tr><td>
-POST</td><td>/receipe/find</td><td>Rechercher une recette</td><td>
+POST</td><td>/receipe/create</td><td>Créer une recette</td><td>
 
 ```json
 {
-    String search,
+    "nom": string,
+    "categoryName": string,
+    "image": string,
+    "estimatedTime": int,
+    "instructions": [string],
+    "ri": [
+      {
+        "ingredient": {
+          "idIngredient": int
+        },
+        "quantity": float,
+        "unit": {
+          "idUnit": int
+        }
+      }
+    ]
 }
 ```
 </td><td>
@@ -126,20 +141,7 @@ En cas de succès
 ```json
 status: 200
 data : {
-    String success = "receipe found",
-    Object receipes = [{
-        Int idReceipe,
-        String nameReceipe,
-        String imageReceipe,
-        Float rating,
-        Float estimatedTime,
-        String categoryName,
-        Object ingredients: [{
-            String ingredientName,
-            Float quantity,
-            String unity,
-        }],
-    }],
+    boolean: hasBeenCreated
 }
 ```
 
@@ -153,82 +155,92 @@ data : {
 ```
 
 </td></tr><tr><td>
-GET</td><td>/receipe/{id}</td><td>Voir une recette</td></td><td><td>En cas de succès
+GET</td><td>/receipe/getAll</td><td>Récupére toutes les recette</td><td>
+</td><td>
+En cas de succès
 
 ```json
 status: 200
 data : {
-    String success = "receipe found",
-    Object receipes = [{
-        Int idReceipe,
-        String nameReceipe,
-        String imageReceipe,
-        Float rating,
-        Float estimatedTime,
-        String categoryName,
-        Object ingredients: [{
-            String ingredientName,
-            Float quantity,
-            String unity,
-        }],
-    }],
+    "receipes": [{
+        "id": int,
+        "name": string,
+        "image": string,
+        "category": {
+            "id": int,
+            "name": string
+        },
+        "rating": float,
+        "estimatedTime": int,
+    }]
+}
+```
+</td></tr><tr><td>
+GET</td><td>/receipe/{id}</td><td>Récupère une recette par son ID</td></td><td><td>En cas de succès
+
+```json
+status: 200
+data : {
+    "receipe": {
+        "id": int,
+        "name": string,
+        "image": string,
+        "category": {
+            "id": int,
+            "name": string
+        },
+        "rating": float,
+        "estimatedTime": int,
+    },
+    "instructions": [string]
+    "ri": [{
+        "receipe": Receipe
+        "ingredient": {
+            "id": int,
+            "name": string
+        },
+        "unit": {
+            "id": int,
+            "name": string,
+        }, 
+        "quantity": float
+    }]
 }
 ```
 
 En cas d’erreur
 
 ```json
-status: 400
+status: 404
 data : {
     Object error, 
 }
 ```
 
 </td></tr><tr><td>
-POST</td><td>/receipe/create</td><td>Partager une recette (sans rajouter dans la liste de course). Renvoie la recette créer dans la BDD</td><td>
-
-```json
-{
-    String nom,
-    String image,
-    Float estimatedTime,
-    Int idCategorie,
-    Object ingredients = [{
-        Int idIngredient,
-        Float quantity,
-        String unity,
-    }],
-}
-```
-</td><td>
-En cas de succès
+GET</td><td>/receipe/search?name=[nomReceipe]&ingredientIds=[idIngredient1],[idIngredient2]...</td><td>Récupère une recette par son nom et/ou ses ingrédients (si des ingrédients sont spécifiés, un seul ingrédient doit match pour passer)</td><td><td>En cas de succès
 
 ```json
 status: 200
-data : {
-    String success = "receipe created",
-    Object receipes = [{
-        Int idReceipe,
-        String nameReceipe,
-        String imageReceipe,
-        Float rating,
-        Float estimatedTime,
-        String categoryName,
-        Object ingredients: [{
-            String ingredientName,
-            Float quantity,
-            String unity,
-        }],
-    }],
-}
+data : [{
+    "id": int,
+    "name": string,
+    "image": string,
+    "category": {
+        "id": int,
+        "name": string
+    },
+    "rating": float,
+    "estimatedTime": int,
+}]
 ```
 
 En cas d’erreur
 
 ```json
-status: 400
+status: 404
 data : {
-    Object error,
+    Object error, 
 }
 ```
 
