@@ -230,7 +230,7 @@ data : {
 ```
 
 </td></tr><tr><td>
-GET</td><td>/receipe/search?name=[nomReceipe]&ingredientIds=[idIngredient1],[idIngredient2]...</td><td>Récupère une recette par son nom et/ou ses ingrédients (si des ingrédients sont spécifiés, un seul ingrédient doit match pour passer)</td><td><td>En cas de succès
+GET</td><td>/receipe/search?name=[nom]</td><td>Récupère une recette par son nom / le nom d'un de ses ingrédients</td><td><td>En cas de succès
 
 ```json
 status: 200

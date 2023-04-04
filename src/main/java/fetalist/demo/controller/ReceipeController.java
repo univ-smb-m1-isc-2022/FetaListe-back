@@ -50,9 +50,8 @@ public class ReceipeController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<Receipe>> searchReceipe(@RequestParam(required = false) String name,
-                                                                       @RequestParam(required = false) List<Long> ingredientIds) {
-        List<Receipe> receipes = receipeService.searchReceipe(name, ingredientIds);
+    public ResponseEntity<List<Receipe>> searchReceipe(@RequestParam(required = false) String name) {
+        List<Receipe> receipes = receipeService.searchReceipe(name);
         if (receipes == null || receipes.isEmpty()) {
             return ResponseEntity.notFound().build();
         } else {
