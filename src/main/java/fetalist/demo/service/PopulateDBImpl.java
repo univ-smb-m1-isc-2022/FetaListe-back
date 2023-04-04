@@ -26,8 +26,8 @@ public class PopulateDBImpl implements PopulateDBService{
     private ReceipeIngredientRepository receipeIngredientRepository;
 
     @Override
-    public void fillDatabaseWithJson() {
-        if (receipeRepository.count() != 0) return;
+    public String fillDatabaseWithJson() {
+        if (receipeRepository.count() != 0) return "already filled";
         JSONParser jsonParser = new JSONParser();
         try
         {
@@ -35,9 +35,10 @@ public class PopulateDBImpl implements PopulateDBService{
             Object obj = jsonParser.parse(reader);
             JSONArray receipeList = (JSONArray) obj;
             receipeList.forEach( rec -> parseReceipeObject( (JSONObject) rec ));
-
+            return "OK";
         } catch (IOException | ParseException e) {
             e.printStackTrace();
+            return "Error occured :\n".concat(e.toString());
         }
     }
 
