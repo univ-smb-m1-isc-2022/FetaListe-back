@@ -8,7 +8,6 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -38,17 +37,15 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     }
 
     @Override
-    public List<CompleteShoppingListResponse> getListOf(Token t, long idShoppingList) {
-        Users user = t.getUsers();
-        if (idShoppingList != -1) {
-            ShoppingList s = shoppingListRepository.findById(idShoppingList).orElse(null);
-            if (s == null || !Objects.equals(s.getUser().getIdUser(), t.getUsers().getIdUser())) return null;
-            return List.of(createSLById(s.getId()));
-        }
-        List<ShoppingList> sls = shoppingListRepository.findAll(Example.of(new ShoppingList(user)));
-        List<CompleteShoppingListResponse> cslrl = new ArrayList<>();
-        sls.forEach(s -> cslrl.add(createSLById(s.getId())));
-        return cslrl;
+    public List<ShoppingList> getListOf(Token t) {
+        return shoppingListRepository.findAll(Example.of(new ShoppingList(t.getUsers())));
+    }
+
+    @Override
+    public CompleteShoppingListResponse getListFromId(Token t, long id) {
+        ShoppingList s = shoppingListRepository.findById(id).orElse(null);
+        if (s == null || !Objects.equals(s.getUser().getIdUser(), t.getUsers().getIdUser())) return null;
+        return createSLById(s.getId());
     }
 
     @Override

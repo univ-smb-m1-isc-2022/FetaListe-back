@@ -29,14 +29,24 @@ public class ShoppingListController {
         return sl == null ? new ResponseEntity<>(HttpStatusCode.valueOf(400)) : ResponseEntity.ok(sl);
     }
 
-    @PostMapping("/getList")
-    public ResponseEntity<List<CompleteShoppingListResponse>> getListOfUser(@RequestBody GetShoppingListBody body) {
+    @PostMapping("/getAll")
+    public ResponseEntity<List<ShoppingList>> getListsOfUser(@RequestBody GetShoppingListBody body) {
         // Si idList précisé : renvoyer que celle ci, sinon toutes les renvoyer
         Token t = tokenService.checkToken(body.getToken());
         if (t == null) return new ResponseEntity<>(HttpStatusCode.valueOf(403)); // Tout token invalide ou expiré est interdit
-        List<CompleteShoppingListResponse> sl = shoppingListService.getListOf(t, body.getIdShoppingList() == 0 ? -1 : body.getIdShoppingList());
+        List<ShoppingList> sl = shoppingListService.getListOf(t);
         return sl == null ? new ResponseEntity<>(HttpStatusCode.valueOf(400)) : ResponseEntity.ok(sl);
     }
+
+    @PostMapping("/getById")
+    public ResponseEntity<CompleteShoppingListResponse> getListOfUser(@RequestBody GetShoppingListBody body) {
+        // Si idList précisé : renvoyer que celle ci, sinon toutes les renvoyer
+        Token t = tokenService.checkToken(body.getToken());
+        if (t == null) return new ResponseEntity<>(HttpStatusCode.valueOf(403)); // Tout token invalide ou expiré est interdit
+        CompleteShoppingListResponse sl = shoppingListService.getListFromId(t, body.getIdShoppingList());
+        return sl == null ? new ResponseEntity<>(HttpStatusCode.valueOf(400)) : ResponseEntity.ok(sl);
+    }
+
 
     @PostMapping("/edit")
     public ResponseEntity<CompleteShoppingListResponse> editList(@RequestBody EditShoppingListBody body) {

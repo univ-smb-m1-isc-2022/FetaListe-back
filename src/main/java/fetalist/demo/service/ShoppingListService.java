@@ -10,7 +10,8 @@ public interface ShoppingListService {
 
     ShoppingList createList(Token t);
 
-    List<CompleteShoppingListResponse> getListOf(Token t, long idShoppingList);
+    List<ShoppingList> getListOf(Token t);
+    CompleteShoppingListResponse getListFromId(Token t, long id);
 
     CompleteShoppingListResponse addToList(Token t, long idShoppingList, List<Long> idsReceipes, long nbPersonnes);
 
