@@ -58,6 +58,29 @@ public class SMSServiceImpl implements SMSService {
         }
     }
 
+    @Override
+    public String shareSListInApp(Token t, long idUserToSend, long idSLToShare) {
+        Users otherUser = Users.builder().idUser(idUserToSend).build();
+        Friend f = friendRepository.findBy(
+                        Example.of(
+                                Friend.builder()
+                                        .user1(t.getUsers())
+                                        .user2(otherUser)
+                                        .build()), FluentQuery.FetchableFluentQuery::first)
+                .orElse(friendRepository
+                        .findBy(Example.of(
+                                Friend.builder()
+                                        .user1(otherUser)
+                                        .user2(t.getUsers())
+                                        .build()),FluentQuery.FetchableFluentQuery::first).orElse(null));
+        if (f == null || !Objects.equals(f.getStatus(), "ACCEPTED")) return "Not friend with given user";
+        ShoppingList slToShare = shoppingListRepository.findById(idSLToShare).orElse(null);
+        if (slToShare == null || !Objects.equals(slToShare.getUser().getIdUser(), t.getUsers().getIdUser())) return "This list isn't yours";
+        ShoppingList sharedSL = ShoppingList.builder().user(otherUser).owner(slToShare.getOwner()).maxBuyDate(slToShare.getMaxBuyDate()).build();
+        shoppingListRepository.save(sharedSL);
+        return "OK";
+    }
+
     private String createMessageFrom(String name, CompleteShoppingListResponse slToShare) {
         StringBuilder messageBuilder = new StringBuilder();
 
