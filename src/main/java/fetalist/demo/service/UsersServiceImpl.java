@@ -54,6 +54,7 @@ public class UsersServiceImpl implements UsersService{
         Token t = tokenRepository.findBy(Example.of(new Token(u)), FluentQuery.FetchableFluentQuery::first).orElse(null);
         if (t == null) return null;
         t.refreshAccessValidUntil();
+        tokenRepository.save(t);
         return t;
     }
 

@@ -5,13 +5,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateShoppingListBody {
     private String token;
-    private Date reminderDate;
+    private long reminderDate;
 }

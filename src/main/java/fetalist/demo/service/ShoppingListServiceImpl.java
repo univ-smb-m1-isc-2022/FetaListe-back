@@ -34,7 +34,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         return shoppingListRepository.save(ShoppingList.builder()
                 .user(t.getUsers())
                 .owner(t.getUsers())
-                .maxBuyDate(reminderDate)
+                .maxBuyDate(reminderDate.getTime())
                 .build());
     }
 

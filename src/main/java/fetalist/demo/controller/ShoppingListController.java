@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -25,8 +26,8 @@ public class ShoppingListController {
     public ResponseEntity<ShoppingList> createShoppingList(@RequestBody CreateShoppingListBody body) {
         Token t = tokenService.checkToken(body.getToken());
         if (t == null) return new ResponseEntity<>(HttpStatusCode.valueOf(403)); // Tout token invalide ou expiré est interdit
-        ShoppingList sl = shoppingListService.createList(t, body.getReminderDate());
-        return sl == null ? new ResponseEntity<>(HttpStatusCode.valueOf(400)) : ResponseEntity.ok(sl);
+        ShoppingList sl = shoppingListService.createList(t, new Date(body.getReminderDate()));
+        return ResponseEntity.ok(sl);
     }
 
     @PostMapping("/getAll")
