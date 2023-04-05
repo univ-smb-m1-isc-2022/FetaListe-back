@@ -524,7 +524,7 @@ POST</td><td>/shop/create</td><td>Crée une nouvelle liste de courses</td><td>
 ```json
 {
     "token": string,
-    "reminderDate": Date
+    "reminderDate": int
 }
 ```
 </td><td>En cas de succès
@@ -535,7 +535,7 @@ status: 200
     "id": string,
     "user": User,
     "owner": User,
-    "maxBuyDate": Date,
+    "maxBuyDate": int,
 }
 ```
 
@@ -562,7 +562,7 @@ status: 200
     "id": string,
     "user": User,
     "owner": User,
-    "maxBuyDate": Date,
+    "maxBuyDate": int,
 }]
 ```
 
@@ -585,7 +585,7 @@ status: 200
         "id": string,
         "user": User,
         "owner": User,
-        "maxBuyDate": Date,
+        "maxBuyDate": int,
     },
     "rsl": [{
         "receipe": Receipe,
@@ -631,7 +631,7 @@ status: 200
         "id": string,
         "user": User,
         "owner": User,
-        "maxBuyDate": Date,
+        "maxBuyDate": int,
     },
     "rsl": [{
         "receipe": Receipe,

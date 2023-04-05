@@ -6,8 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 @Data // lombok, getter and setter
 @Builder // lombok design partern builder
 @AllArgsConstructor // constructor with all args
@@ -22,7 +20,7 @@ public class ShoppingList {
     private Users user;
     @ManyToOne
     private Users owner;
-    private Date maxBuyDate;
+    private long maxBuyDate;
 
     public ShoppingList(Users user) {
         this.user=user;
