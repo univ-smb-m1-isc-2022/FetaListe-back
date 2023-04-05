@@ -409,7 +409,7 @@ POST</td><td>/friend/add</td><td>Ajouter un ami</td><td>
 ```json
 {
   "token": string,
-  "idUserToAdd": string
+  "idUserToAdd": int
 }
 ```
 
@@ -714,24 +714,24 @@ data : {
 }
 ```
 
-</td></tr><tr><td><td></td><td><span style="color:red">
-Envoie un rappel pour liste de course (côté serveur uniquement, ce n’est pas une route accessible)</span></td><td>
+</td></tr><tr><td>
+POST</td><td>/msg/send</td><td>Envoyer une liste de course par sms à un ami ou à soi-même</td><td>
 
 ```json
 {
-    String phone,
-    Int idShoppingList,
+  "token": string,
+  "idSLToShare": int,
+  "idUserToSend": int
 }
 ```
 
-</td><td>
-</tr><tr><td>
-GET</td><td>/msg/send/{idShoppingList}/{token}</td><td>Envoyer liste de course par sms à toi même</td><td></td><td>En cas de succès
+
+</td><td>En cas de succès
 
 ```json
 status: 200
 data : {
-  String success = "shopping list sended",
+  string: "OK",
 }
 ```
 
@@ -740,7 +740,7 @@ En cas d’erreur
 ```json
 status: 400
 data : {
-  Object error,
+  string: ErrorResume
 }
 ```
 
@@ -771,5 +771,16 @@ data : { {
 }
 ```
 
-</td></tr>
+</td></tr><tr><td><td></td><td><span style="color:red">
+Envoie un rappel pour liste de course (côté serveur uniquement, ce n’est pas une route accessible)</span></td><td>
+
+```json
+{
+    String phone,
+    Int idShoppingList,
+}
+```
+
+</td><td>
+</tr>
 </table>

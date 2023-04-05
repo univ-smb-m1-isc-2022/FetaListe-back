@@ -7,6 +7,7 @@ import fetalist.demo.repository.FriendRepository;
 import fetalist.demo.repository.UsersRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Example;
+import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -47,7 +48,7 @@ public class FriendServiceImpl implements FriendService {
         if (userInvited == null) {
             return false;
         }
-        Friend fr = friendRepository.findOne(Example.of(Friend.builder().user1(t.getUsers()).user2(userInvited).build())).orElse(null);
+        Friend fr = friendRepository.findBy(Example.of(Friend.builder().user1(t.getUsers()).user2(userInvited).build()), FluentQuery.FetchableFluentQuery::first).orElse(null);
         if (fr == null || !Objects.equals(fr.getStatus(), "PENDING")) return false;
         if (response) {
             fr.setStatus("ACCEPTED");
