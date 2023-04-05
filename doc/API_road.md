@@ -749,25 +749,25 @@ POST</td><td>/msg/share</td><td>Partager liste de courses à un amis (via appli)
 
 ```json
 {
-  String token,
-  Int idShoppingList,
-  Int idFriend,
+  "token": string,
+  "idSLToShare": int,
+  "idUserToSend": int
 }
 ```
 </td><td>En cas de succès
 
 ```json
 status: 200
-data : { {
-  String success = "shopping list sended to friend",
+data : {
+  string: "OK",
 }
 ```
 En cas d’erreur
 
 ```json
 status: 400
-data : { {
-  Object error,
+data : {
+  string: ErrorResume
 }
 ```
 

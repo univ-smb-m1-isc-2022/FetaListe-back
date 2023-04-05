@@ -29,4 +29,13 @@ public class SMSController {
         String s = smsService.shareSList(t, body.getIdUserToSend(), body.getIdSLToShare());
         return ResponseEntity.status(Objects.equals(s, "OK") ? 200 : 400).body(s);
     }
+
+    @PostMapping("/share")
+    public ResponseEntity<String> shareSListInApp(@RequestBody ListShareSMSBody body) {
+        Token t = tokenService.checkToken(body.getToken());
+        if (t == null) return new ResponseEntity<>(HttpStatusCode.valueOf(403)); // Tout token invalide ou expiré est interdit
+
+        String s = smsService.shareSListInApp(t, body.getIdUserToSend(), body.getIdSLToShare());
+        return ResponseEntity.status(Objects.equals(s, "OK") ? 200 : 400).body(s);
+    }
 }
