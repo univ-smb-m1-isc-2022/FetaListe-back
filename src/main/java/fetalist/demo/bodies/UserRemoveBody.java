@@ -1,6 +1,5 @@
 package fetalist.demo.bodies;
 
-import fetalist.demo.model.Token;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserRemoveBody {
-    private Token token;
+    private String token;
     private String password;
 }
