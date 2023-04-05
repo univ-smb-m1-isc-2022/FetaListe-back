@@ -50,6 +50,7 @@ public class ReceipeControllerTest {
                 .estimatedTime(85L)
                 .name("Pizza Margherita")
                 .build();
+
         when(ingredientRepository.findBy(Example.of(Ingredient.builder().idIngredient(1L).build()), FluentQuery.FetchableFluentQuery::first)).thenReturn(Optional.of(Ingredient.builder().idIngredient(1L).name("Tomate").build()));
         when(unitRepository.findBy(Example.of(Unit.builder().idUnit(2L).build()), FluentQuery.FetchableFluentQuery::first)).thenReturn(Optional.of(Unit.builder().idUnit(2L).name("mL").build()));
         CreateReceipeBody receipeBody = CreateReceipeBody.builder()
