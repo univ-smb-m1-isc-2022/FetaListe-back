@@ -10,7 +10,7 @@ public interface UsersService {
 
     Token loginUser(String name, String password);
 
-    boolean deleteUser(Token t, String password);
+    boolean deleteUser(String t, String password);
 
     List<BasicUser> getAllBasicUsers();
 }

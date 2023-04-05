@@ -62,8 +62,8 @@ public class UsersServiceImpl implements UsersService{
     }
 
     @Override
-    public boolean deleteUser(Token t, String password) {
-        Token tDb = tokenRepository.findBy(Example.of(t), FluentQuery.FetchableFluentQuery::first).orElse(null);
+    public boolean deleteUser(String t, String password) {
+        Token tDb = tokenRepository.findBy(Example.of(Token.builder().accessToken(t).build()), FluentQuery.FetchableFluentQuery::first).orElse(null);
         if (tDb == null || !Objects.equals(tDb.getUsers().getPassword(), password)) return false;
         tokenRepository.delete(tDb);
         usersRepository.delete(tDb.getUsers());
