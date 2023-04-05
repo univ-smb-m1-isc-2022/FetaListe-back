@@ -1,5 +1,6 @@
 package fetalist.demo.service;
 
+import fetalist.demo.bodies.BasicUser;
 import fetalist.demo.model.Token;
 import fetalist.demo.model.Users;
 import fetalist.demo.repository.TokenRepository;
@@ -11,7 +12,9 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -65,5 +68,14 @@ public class UsersServiceImpl implements UsersService{
         tokenRepository.delete(tDb);
         usersRepository.delete(tDb.getUsers());
         return true;
+    }
+
+    @Override
+    public List<BasicUser> getAllBasicUsers() {
+        return usersRepository.findAll().stream().map(this::createBasicUser).collect(Collectors.toList());
+    }
+
+    private BasicUser createBasicUser(Users users) {
+        return BasicUser.builder().id(users.getIdUser()).name(users.getName()).build();
     }
 }
