@@ -19,7 +19,8 @@ public class FavoriteServiceImpl implements FavoriteService {
     private ReceipeRepository receipeRepository;
     @Override
     public boolean addFavorite(long idReceipe, Token t) {
-        Receipe r = receipeRepository.getReferenceById(idReceipe);
+        Receipe r = receipeRepository.findById(idReceipe).orElse(null);
+        if (r == null) return false;
         Favorite example = new Favorite(t.getUsers(), r);
         Favorite f = favoriteRepository.findBy(Example.of(example), FluentQuery.FetchableFluentQuery::first).orElse(null);
         if (f == null) {
