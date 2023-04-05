@@ -124,6 +124,17 @@ data : {
 }
 ```
 
+</td></tr><tr><td>GET</td><td>/user/getAll</td><td>Récupère tous les utilisateurs</td><td>
+</td><td>
+
+```json
+status: 200
+data : {
+    "id": int,
+    "name": string,
+}
+```
+
 </td></tr><tr><td>
 POST</td><td>/receipe/create</td><td>Créer une recette (quantités pour une personne)</td><td>
 
