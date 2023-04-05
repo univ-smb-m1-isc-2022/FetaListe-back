@@ -1,5 +1,6 @@
 package fetalist.demo.controller;
 
+import fetalist.demo.bodies.BasicUser;
 import fetalist.demo.bodies.UserLoginBody;
 import fetalist.demo.bodies.UserRegisterBody;
 import fetalist.demo.bodies.UserRemoveBody;
@@ -9,6 +10,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -33,6 +36,11 @@ public class UsersController {
     @PostMapping("/remove")
     public ResponseEntity<Boolean> deleteUser(@RequestBody UserRemoveBody body) {
         return usersService.deleteUser(body.getToken(), body.getPassword()) ? ResponseEntity.ok(true) : new ResponseEntity<>(HttpStatusCode.valueOf(400));
+    }
+
+    @GetMapping("/getAll")
+    public List<BasicUser> getAllUsers() {
+        return usersService.getAllBasicUsers();
     }
 
 }
