@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
-public class ReceipeControllerTest {
+class ReceipeControllerTest {
 
     private MockMvc mockMvc;
 
@@ -35,7 +35,7 @@ public class ReceipeControllerTest {
     // Tests
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         receipeService = mock(ReceipeService.class);
         mockMvc = standaloneSetup(new ReceipeController(receipeService)).build();
         unitRepository = mock(UnitRepository.class);
@@ -43,7 +43,7 @@ public class ReceipeControllerTest {
     }
 
     @Test
-    public void testReceipeRoutes() throws Exception {
+    void testReceipeRoutes() throws Exception {
         Receipe rtype = Receipe.builder().id(1L)
                 .category(Category.builder().id(1L).name("Italian").build())
                 .image("testImage")
