@@ -1,9 +1,8 @@
 package fetalist.demo.controller;
 
+import fetalist.demo.bodies.CompleteReceipeResponse;
 import fetalist.demo.bodies.CreateReceipeBody;
-import fetalist.demo.model.Ingredient;
-import fetalist.demo.model.ReceipeIngredient;
-import fetalist.demo.model.Unit;
+import fetalist.demo.model.*;
 import fetalist.demo.repository.IngredientRepository;
 import fetalist.demo.repository.UnitRepository;
 import fetalist.demo.service.ReceipeService;
@@ -41,29 +40,16 @@ public class ReceipeControllerTest {
         mockMvc = standaloneSetup(new ReceipeController(receipeService)).build();
         unitRepository = mock(UnitRepository.class);
         ingredientRepository = mock(IngredientRepository.class);
-
-
-        // Créer et sauvegarder des ingrédients
-        Ingredient ingredient1 = new Ingredient();
-        ingredient1.setName("Tomate");
-        ingredientRepository.save(ingredient1);
-
-        Ingredient ingredient2 = new Ingredient();
-        ingredient2.setName("Fromage");
-        ingredientRepository.save(ingredient2);
-
-        // Créer et sauvegarder des unités
-        Unit unit1 = new Unit();
-        unit1.setName("g");
-        unitRepository.save(unit1);
-
-        Unit unit2 = new Unit();
-        unit2.setName("mL");
-        unitRepository.save(unit2);
     }
 
     @Test
-    public void testCreateReceipe() throws Exception {
+    public void testReceipeRoutes() throws Exception {
+        Receipe rtype = Receipe.builder().id(1L)
+                .category(Category.builder().id(1L).name("Italian").build())
+                .image("testImage")
+                .estimatedTime(85L)
+                .name("Pizza Margherita")
+                .build();
         when(ingredientRepository.findBy(Example.of(Ingredient.builder().idIngredient(1L).build()), FluentQuery.FetchableFluentQuery::first)).thenReturn(Optional.of(Ingredient.builder().idIngredient(1L).name("Tomate").build()));
         when(unitRepository.findBy(Example.of(Unit.builder().idUnit(2L).build()), FluentQuery.FetchableFluentQuery::first)).thenReturn(Optional.of(Unit.builder().idUnit(2L).name("mL").build()));
         CreateReceipeBody receipeBody = CreateReceipeBody.builder()
@@ -106,5 +92,132 @@ public class ReceipeControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        when(receipeService.getAllReceipe()).thenReturn(List.of(rtype));
+        mockMvc.perform(MockMvcRequestBuilders.get("/receipe/getAll")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(""))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().json("""
+                [{
+                    "id": 1,
+                    "category": {
+                        "id": 1,
+                        "name": "Italian"
+                    },
+                    "name": "Pizza Margherita",
+                    "image": "testImage",
+                    "rating": 0.0,
+                    "estimatedTime": 85
+                }]
+                """));
+
+        Ingredient itype = Ingredient.builder().idIngredient(1L).name("Tomate").build();
+        Unit utype = Unit.builder().idUnit(2L).name("mL").build();
+        CompleteReceipeResponse crrtype = CompleteReceipeResponse.builder().receipe(rtype)
+                .instructions(List.of(
+                        Instruction.builder().receipe(rtype).idInstructions(1L).instruction("test").build()
+                ))
+                .ri(List.of(ReceipeIngredient.builder().ingredient(itype).receipe(rtype).unit(utype).quantity(51.4).build())).build();
+
+        when(receipeService.getReceipeById(1L)).thenReturn(crrtype);
+        mockMvc.perform(MockMvcRequestBuilders.get("/receipe/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(""))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().json("""
+                                {
+                                    "receipe": {
+                                        "id": 1,
+                                        "name": "Pizza Margherita",
+                                        "category": {
+                                            "name":"Italian"
+                                        },
+                                        "image": "testImage",
+                                        "estimatedTime": 85
+                                    },
+                                    "instructions": [
+                                        {
+                                            "instruction": "test",
+                                        }
+                                    ],
+                                    "ri": [
+                                        {
+                                                "ingredient": {
+                                                    "name": "Tomate"
+                                                },
+                                                "quantity": 51.4,
+                                                "unit": {
+                                                    "name": "mL"
+                                                }
+                                        }
+                                    ]
+                                }"""));
+        when(receipeService.searchReceipe(null)).thenReturn(List.of(rtype));
+        when(receipeService.searchReceipe("pizza")).thenReturn(List.of(rtype));
+        when(receipeService.searchReceipe("tomate")).thenReturn(List.of(rtype));
+        when(receipeService.searchReceipe("autreChose")).thenReturn(List.of());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/receipe/search")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(""))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().json("""
+                [{
+                    "id": 1,
+                    "category": {
+                        "id": 1,
+                        "name": "Italian"
+                    },
+                    "name": "Pizza Margherita",
+                    "image": "testImage",
+                    "rating": 0.0,
+                    "estimatedTime": 85
+                }]
+                """));
+        mockMvc.perform(MockMvcRequestBuilders.get("/receipe/search?name=pizza")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(""))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().json("""
+                [{
+                    "id": 1,
+                    "category": {
+                        "id": 1,
+                        "name": "Italian"
+                    },
+                    "name": "Pizza Margherita",
+                    "image": "testImage",
+                    "rating": 0.0,
+                    "estimatedTime": 85
+                }]
+                """));
+        mockMvc.perform(MockMvcRequestBuilders.get("/receipe/search?name=tomate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(""))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().json("""
+                [{
+                    "id": 1,
+                    "category": {
+                        "id": 1,
+                        "name": "Italian"
+                    },
+                    "name": "Pizza Margherita",
+                    "image": "testImage",
+                    "rating": 0.0,
+                    "estimatedTime": 85
+                }]
+                """));
+        mockMvc.perform(MockMvcRequestBuilders.get("/receipe/search?name=autreChose")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(""))
+                .andExpect(status().isNotFound());
+
     }
 }
