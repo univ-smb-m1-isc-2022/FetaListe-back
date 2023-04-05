@@ -21,8 +21,4 @@ public class ShoppingList {
     @ManyToOne
     private Users owner;
     private long maxBuyDate;
-
-    public ShoppingList(Users user) {
-        this.user=user;
-    }
 }
