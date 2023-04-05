@@ -69,7 +69,7 @@ public class Token {
      * Refresh la validité du token quand une nouvelle connexion par mot de passe est effectuée (validité = 7 jours)
      */
     public void refreshAccessValidUntil() {
-        accessValidUntil = new Date(Date.from(Instant.now().plusSeconds(7*24*60*60)).getTime());
+        accessValidUntil = new Date(Date.from(Instant.now().plusSeconds(7L*24*60*60)).getTime());
     }
 
     public static Token generateToken(Users u, String provider) {
