@@ -40,7 +40,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
 
     @Override
     public List<ShoppingList> getListOf(Token t) {
-        return shoppingListRepository.findAll(Example.of(new ShoppingList(t.getUsers())));
+        return shoppingListRepository.findAll();
     }
 
     @Override
