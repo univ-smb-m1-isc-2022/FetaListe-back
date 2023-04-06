@@ -18,7 +18,6 @@ import java.util.Date;
 public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
     private Long idUser;
     @Column(length = 20)
     private String name;
