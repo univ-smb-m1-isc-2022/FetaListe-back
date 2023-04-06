@@ -771,6 +771,65 @@ data : {
 }
 ```
 
+</td></tr><tr><td>
+POST</td><td>/substitute/add</td><td>Crée un substitut pour un ingrédient</td><td>
+
+```json
+{
+  "idIngredient": int,
+  "idIngredientToSubtitute": int
+}
+```
+</td><td>En cas de succès
+
+```json
+status: 200
+data : {
+  "baseIngredient": Ingredient,
+  "substitute": Ingredient,
+}
+```
+En cas d’erreur
+
+```json
+status: 400
+```
+
+</td></tr><tr><td>
+GET</td><td>/substitute/getAllOf/{ingredientId}</td><td>Récupère tous les substituts pour un ingrédient donné</td><td>
+</td><td>En cas de succès
+
+```json
+status: 200
+data : [{
+  "baseIngredient": Ingredient,
+  "substitute": Ingredient,
+}]
+```
+
+</td></tr><tr><td>
+POST</td><td>/substitute/remove</td><td>Supprime un substitut pour un ingrédient</td><td>
+
+```json
+{
+  "idIngredient": int,
+  "idIngredientToSubtitute": int
+}
+```
+</td><td>En cas de succès
+
+```json
+status: 200
+data : {
+  boolean: true,
+}
+```
+En cas d’erreur
+
+```json
+status: 400
+```
+
 </td></tr><tr><td><td></td><td><span style="color:red">
 Envoie un rappel pour liste de course (côté serveur uniquement, ce n’est pas une route accessible)</span></td><td>
 

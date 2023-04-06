@@ -12,7 +12,7 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/populate")
 @AllArgsConstructor
-public class PopulateDBServiceController {
+public class PopulateDBController {
     private PopulateDBService populateDBService;
 
     @PostMapping("/")

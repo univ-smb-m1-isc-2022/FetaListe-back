@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor // constructor with no args
 @Entity
 @Table
+@IdClass(SubstituteId.class)
 public class Substitute {
     @Id
     @ManyToOne
