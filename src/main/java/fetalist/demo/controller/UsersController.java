@@ -23,7 +23,6 @@ public class UsersController {
 
     @PostMapping("/register")
     public ResponseEntity<Token> registerUser(@RequestBody UserRegisterBody body) {
-        System.out.println(body);
         Token t = usersService.registerUser(body.getProvider(), body.getName(), body.getPassword(), body.getPhoneNumber(), body.getMail());
         return t == null ? new ResponseEntity<>(HttpStatusCode.valueOf(400)) : ResponseEntity.ok(t);
     }

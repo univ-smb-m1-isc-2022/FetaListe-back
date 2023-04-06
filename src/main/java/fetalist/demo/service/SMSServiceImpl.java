@@ -53,8 +53,7 @@ public class SMSServiceImpl implements SMSService {
         if (response.getMessages().get(0).getStatus() == MessageStatus.OK) {
             return "OK";
         } else {
-            System.out.println("Message failed with error: " + response.getMessages().get(0).getErrorText());
-            return "Message failed to send";
+            return "Message failed to send" + response.getMessages().get(0).getErrorText();
         }
     }
 

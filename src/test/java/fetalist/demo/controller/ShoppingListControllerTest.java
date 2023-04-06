@@ -50,7 +50,6 @@ class ShoppingListControllerTest {
         when(tokenService.checkToken(ttype.getAccessToken())).thenReturn(ttype);
         String rqContent = "{\"token\":\"" + ttype.getAccessToken() + "\", \"reminderDate\":\"" + d.getTime() + "\"}";
         String utypeString = "{\"name\": \"test\"}";
-        System.out.println(rqContent);
         mockMvc.perform(MockMvcRequestBuilders.post("/shop/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(rqContent))
