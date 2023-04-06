@@ -73,6 +73,7 @@ class ShoppingListControllerTest {
                 .andExpect(content().json("{\"sl\":{\"id\":1}, \"rsl\": [], \"sli\": []}"));
 
         when(shoppingListService.addToList(ttype, 1L,List.of(1L),3)).thenReturn(CompleteShoppingListResponse.builder().sl(stype).rsl(List.of(ReceipeShoppingList.builder().receipe(rtype).build())).sli(List.of(ShoppingListIngredient.builder().ingredient(Ingredient.builder().name("Tomate").build()).build())).build());
+        when(shoppingListService.removeFromList(ttype, 1L,List.of(1L),3)).thenReturn(CompleteShoppingListResponse.builder().sl(stype).rsl(List.of()).sli(List.of()).build());
 
         mockMvc.perform(MockMvcRequestBuilders.post("/shop/edit")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -80,6 +81,12 @@ class ShoppingListControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json("{\"sl\":{\"id\":1,\"user\": " + utypeString + ", \"owner\": " + utypeString + ", \"maxBuyDate\": " + d.getTime() + "}, \"rsl\": [{\"receipe\":{\"name\": \"Pizza Margherita\" }}], \"sli\": [{\"ingredient\": {\"name\":\"Tomate\"} }]}"));
+        mockMvc.perform(MockMvcRequestBuilders.post("/shop/edit")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"token\": \""+ttype.getAccessToken()+"\",\"idShoppingList\": 1,\"add\": false,\"idsReceipes\": [1],\"nbPersonnes\": 3}"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().json("{\"sl\":{\"id\":1,\"user\": " + utypeString + ", \"owner\": " + utypeString + ", \"maxBuyDate\": " + d.getTime() + "}, \"rsl\": [], \"sli\": []}"));
 
         when(shoppingListService.deleteList(ttype, 1L)).thenReturn(true);
         mockMvc.perform(MockMvcRequestBuilders.post("/shop/remove")
