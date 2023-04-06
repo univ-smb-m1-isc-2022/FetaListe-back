@@ -46,7 +46,7 @@ public class SMSServiceImpl implements SMSService {
             return "Not friend with given user";
         }
         ShoppingList slToShare = shoppingListRepository.findBy(Example.of(ShoppingList.builder().id(idSLToShare).build()), FluentQuery.FetchableFluentQuery::first).orElse(null);
-        if (slToShare == null || !Objects.equals(slToShare.getUser().getIdUser(), t.getUsers().getIdUser())) return "This list isn't yours";
+        if (slToShare == null) return "This list isn't yours";
         TextMessage message = new TextMessage("Fetaliste",
                 Objects.equals(f.getUser1().getIdUser(), t.getUsers().getIdUser()) ? f.getUser2().getPhone() : f.getUser1().getPhone(),
                 this.createMessageFrom(t.getUsers().getName(), shoppingListService.getListFromId(t,slToShare.getId()))
