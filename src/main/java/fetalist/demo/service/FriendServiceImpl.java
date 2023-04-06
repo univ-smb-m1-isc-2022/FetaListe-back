@@ -48,7 +48,7 @@ public class FriendServiceImpl implements FriendService {
         if (userInvited == null) {
             return false;
         }
-        Friend fr = friendRepository.findBy(Example.of(Friend.builder().user1(t.getUsers()).user2(userInvited).build()), FluentQuery.FetchableFluentQuery::first).orElse(null);
+        Friend fr = friendRepository.findBy(Example.of(Friend.builder().user1(userInvited).user2(t.getUsers()).build()), FluentQuery.FetchableFluentQuery::first).orElse(null);
         if (fr == null || !Objects.equals(fr.getStatus(), "PENDING")) return false;
         if (response) {
             fr.setStatus("ACCEPTED");
