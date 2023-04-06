@@ -93,6 +93,33 @@ class ReceipeControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+        receipeBody.setName(null);
+        when(receipeService.createReceipe(receipeBody)).thenThrow();
+        mockMvc.perform(MockMvcRequestBuilders.post("/receipe/create")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                    "categoryName": "Italian",
+                                    "image": "testImage",
+                                    "estimatedTime": 85,
+                                    "instructions": [
+                                    "Faire la pate", "Mettre la sauce", "Mettre le fromage", "Faire cuire"
+                                    ],
+                                    "ri": [
+                                        {
+                                                "ingredient": {
+                                                    "idIngredient": 1
+                                                },
+                                                "quantity": 51.4,
+                                                "unit": {
+                                                    "idUnit": 2
+                                                }
+                                        }
+                                    ]
+                                }""")
+                )
+                .andExpect(status().isBadRequest());
+
 
         when(receipeService.getAllReceipe()).thenReturn(List.of(rtype));
         mockMvc.perform(MockMvcRequestBuilders.get("/receipe/getAll")
@@ -122,6 +149,10 @@ class ReceipeControllerTest {
                 ))
                 .ri(List.of(ReceipeIngredient.builder().ingredient(itype).receipe(rtype).unit(utype).quantity(51.4).build())).build();
 
+        when(receipeService.getReceipeById(2L)).thenReturn(null);
+        mockMvc.perform(MockMvcRequestBuilders.get("/receipe/2")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
         when(receipeService.getReceipeById(1L)).thenReturn(crrtype);
         mockMvc.perform(MockMvcRequestBuilders.get("/receipe/1")
                         .contentType(MediaType.APPLICATION_JSON)
