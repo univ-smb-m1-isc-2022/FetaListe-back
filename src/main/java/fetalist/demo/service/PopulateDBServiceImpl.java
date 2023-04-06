@@ -18,7 +18,7 @@ import java.util.Objects;
 
 @Service
 @AllArgsConstructor
-public class PopulateDBImpl implements PopulateDBService{
+public class PopulateDBServiceImpl implements PopulateDBService{
     private ReceipeRepository receipeRepository;
     private CategoryRepository categoryRepository;
     private InstructionRepository instructionRepository;
