@@ -36,7 +36,7 @@ public class SMSServiceImpl implements SMSService {
         System.out.println("\u001B[0m");
         VonageClient client = VonageClient.builder().apiKey("9dce1d5f").apiSecret("PAVZjYq0xIBObWl6").build();
         Users otherUser = Users.builder().idUser(idUserToSend).build();
-        Friend f = idUserToSend == t.getUsers().getIdUser() ? Friend.builder().user1(t.getUsers()).status(Friend.ACCEPTED).build() : friendRepository.findBy(
+        Friend f = idUserToSend == t.getUsers().getIdUser() ? Friend.builder().user1(t.getUsers()).user2(t.getUsers()).status(Friend.ACCEPTED).build() : friendRepository.findBy(
                 Example.of(
                         Friend.builder()
                                 .user1(t.getUsers())
