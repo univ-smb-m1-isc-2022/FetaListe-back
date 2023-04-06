@@ -37,7 +37,6 @@ public class PopulateDBImpl implements PopulateDBService{
             receipeList.forEach( rec -> parseReceipeObject( (JSONObject) rec ));
             return "OK";
         } catch (IOException e) {
-            e.printStackTrace();
             return "Error occured :\n".concat(e.toString());
         }
     }

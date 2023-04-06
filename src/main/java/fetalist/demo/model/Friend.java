@@ -24,4 +24,7 @@ public class Friend {
 
     @Column(length=10)
     private String status;
+
+    public static final String ACCEPTED = "ACCEPTED";
+    public static final String PENDING = "PENDING";
 }
