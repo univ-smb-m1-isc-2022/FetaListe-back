@@ -15,6 +15,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -45,8 +46,9 @@ public class SMSServiceImpl implements SMSService {
         if (f == null || !Objects.equals(f.getStatus(), Friend.ACCEPTED)) {
             return "Not friend with given user";
         }
-        ShoppingList slToShare = shoppingListRepository.findBy(Example.of(ShoppingList.builder().id(idSLToShare).build()), FluentQuery.FetchableFluentQuery::first).orElse(null);
-        if (slToShare == null) return "This list isn't yours";
+        List<ShoppingList> slToSharePossible = shoppingListRepository.findAll().stream().filter(sl -> sl.getId() == idSLToShare).toList();
+        if (slToSharePossible.size() == 0) return "This list isn't yours";
+        ShoppingList slToShare = slToSharePossible.get(0);
         TextMessage message = new TextMessage("Fetaliste",
                 Objects.equals(f.getUser1().getIdUser(), t.getUsers().getIdUser()) ? f.getUser2().getPhone() : f.getUser1().getPhone(),
                 this.createMessageFrom(t.getUsers().getName(), shoppingListService.getListFromId(t,slToShare.getId()))
