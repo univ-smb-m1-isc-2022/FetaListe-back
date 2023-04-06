@@ -64,7 +64,7 @@ class FriendControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"token\": \"t1\", \"idFriendInviteToRespond\": 2}"))
                 .andExpect(status().isOk());
-        when(friendService.getAllFriend(ttype1)).thenReturn(List.of(Friend.builder().user1(utype1).user2(utype2).status("ACCEPTED").build()));
+        when(friendService.getAllFriend(ttype1)).thenReturn(List.of(Friend.builder().user1(utype1).user2(utype2).status(Friend.ACCEPTED).build()));
         mockMvc.perform(MockMvcRequestBuilders.post("/friend/getAll")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"token\": \"t1\"}"))

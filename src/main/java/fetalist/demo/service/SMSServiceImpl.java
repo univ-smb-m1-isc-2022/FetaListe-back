@@ -38,7 +38,7 @@ public class SMSServiceImpl implements SMSService {
                                         .user1(otherUser)
                                         .user2(t.getUsers())
                                         .build()),FluentQuery.FetchableFluentQuery::first).orElse(null));
-        if (f == null || !Objects.equals(f.getStatus(), "ACCEPTED")) {
+        if (f == null || !Objects.equals(f.getStatus(), Friend.ACCEPTED)) {
             return "Not friend with given user";
         }
         ShoppingList slToShare = shoppingListRepository.findById(idSLToShare).orElse(null);
@@ -72,7 +72,7 @@ public class SMSServiceImpl implements SMSService {
                                         .user1(otherUser)
                                         .user2(t.getUsers())
                                         .build()),FluentQuery.FetchableFluentQuery::first).orElse(null));
-        if (f == null || !Objects.equals(f.getStatus(), "ACCEPTED")) return "Not friend with given user";
+        if (f == null || !Objects.equals(f.getStatus(), Friend.ACCEPTED)) return "Not friend with given user";
         ShoppingList slToShare = shoppingListRepository.findById(idSLToShare).orElse(null);
         if (slToShare == null || !Objects.equals(slToShare.getUser().getIdUser(), t.getUsers().getIdUser())) return "This list isn't yours";
         ShoppingList sharedSL = ShoppingList.builder().user(otherUser).owner(slToShare.getOwner()).maxBuyDate(slToShare.getMaxBuyDate()).build();

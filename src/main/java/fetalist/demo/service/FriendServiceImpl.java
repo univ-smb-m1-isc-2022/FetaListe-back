@@ -30,7 +30,7 @@ public class FriendServiceImpl implements FriendService {
         if (friendRepository.exists(Example.of(friendRequest)) || friendRepository.exists(Example.of(friendRequestReversed))) {
             return false;
         }
-        friendRequest.setStatus("PENDING");
+        friendRequest.setStatus(Friend.PENDING);
         friendRepository.save(friendRequest);
         return true;
     }
@@ -49,9 +49,9 @@ public class FriendServiceImpl implements FriendService {
             return false;
         }
         Friend fr = friendRepository.findBy(Example.of(Friend.builder().user1(userInvited).user2(t.getUsers()).build()), FluentQuery.FetchableFluentQuery::first).orElse(null);
-        if (fr == null || !Objects.equals(fr.getStatus(), "PENDING")) return false;
+        if (fr == null || !Objects.equals(fr.getStatus(), Friend.PENDING)) return false;
         if (response) {
-            fr.setStatus("ACCEPTED");
+            fr.setStatus(Friend.ACCEPTED);
             friendRepository.save(fr);
         } else {
             friendRepository.delete(fr);
