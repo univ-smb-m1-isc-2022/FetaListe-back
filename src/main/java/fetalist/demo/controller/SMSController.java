@@ -1,6 +1,7 @@
 package fetalist.demo.controller;
 
 import fetalist.demo.bodies.ListShareSMSBody;
+import fetalist.demo.bodies.ResponseString;
 import fetalist.demo.model.Token;
 import fetalist.demo.service.SMSService;
 import fetalist.demo.service.TokenService;
@@ -22,20 +23,20 @@ public class SMSController {
     private TokenService tokenService;
 
     @PostMapping("/send")
-    public ResponseEntity<String> shareSList(@RequestBody ListShareSMSBody body) {
+    public ResponseEntity<ResponseString> shareSList(@RequestBody ListShareSMSBody body) {
         Token t = tokenService.checkToken(body.getToken());
         if (t == null) return new ResponseEntity<>(HttpStatusCode.valueOf(403)); // Tout token invalide ou expiré est interdit
 
         String s = smsService.shareSList(t, body.getIdUserToSend(), body.getIdSLToShare());
-        return ResponseEntity.status(Objects.equals(s, "OK") ? 200 : 400).body(s);
+        return ResponseEntity.status(Objects.equals(s, "OK") ? 200 : 400).body(new ResponseString(s));
     }
 
     @PostMapping("/share")
-    public ResponseEntity<String> shareSListInApp(@RequestBody ListShareSMSBody body) {
+    public ResponseEntity<ResponseString> shareSListInApp(@RequestBody ListShareSMSBody body) {
         Token t = tokenService.checkToken(body.getToken());
         if (t == null) return new ResponseEntity<>(HttpStatusCode.valueOf(403)); // Tout token invalide ou expiré est interdit
 
         String s = smsService.shareSListInApp(t, body.getIdUserToSend(), body.getIdSLToShare());
-        return ResponseEntity.status(Objects.equals(s, "OK") ? 200 : 400).body(s);
+        return ResponseEntity.status(Objects.equals(s, "OK") ? 200 : 400).body(new ResponseString(s));
     }
 }
