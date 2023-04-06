@@ -31,7 +31,7 @@ public class ShoppingListController {
     }
 
     @PostMapping("/getAll")
-    public ResponseEntity<List<ShoppingList>> getListsOfUser(@RequestBody GetShoppingListBody body) {
+    public ResponseEntity<List<ShoppingList>> getListsOfUser(@RequestBody GetAllShoppingListBody body) {
         // Si idList précisé : renvoyer que celle ci, sinon toutes les renvoyer
         Token t = tokenService.checkToken(body.getToken());
         if (t == null) return new ResponseEntity<>(HttpStatusCode.valueOf(403)); // Tout token invalide ou expiré est interdit
