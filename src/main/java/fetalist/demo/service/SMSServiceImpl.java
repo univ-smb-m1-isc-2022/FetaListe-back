@@ -7,6 +7,8 @@ import com.vonage.client.sms.messages.TextMessage;
 import fetalist.demo.bodies.CompleteShoppingListResponse;
 import fetalist.demo.model.*;
 import fetalist.demo.repository.FriendRepository;
+import fetalist.demo.repository.ReceipeShoppingListRepository;
+import fetalist.demo.repository.ShoppingListIngredientRepository;
 import fetalist.demo.repository.ShoppingListRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Example;
@@ -21,6 +23,8 @@ public class SMSServiceImpl implements SMSService {
 
     private FriendRepository friendRepository;
     private ShoppingListRepository shoppingListRepository;
+    private ShoppingListIngredientRepository shoppingListIngredientRepository;
+    private ReceipeShoppingListRepository receipeShoppingListRepository;
     private ShoppingListService shoppingListService;
     @Override
     public String shareSList(Token t, long idUserToSend, long idSLToShare) {
@@ -76,7 +80,23 @@ public class SMSServiceImpl implements SMSService {
         ShoppingList slToShare = shoppingListRepository.findById(idSLToShare).orElse(null);
         if (slToShare == null || !Objects.equals(slToShare.getUser().getIdUser(), t.getUsers().getIdUser())) return "This list isn't yours";
         ShoppingList sharedSL = ShoppingList.builder().user(otherUser).owner(slToShare.getOwner()).maxBuyDate(slToShare.getMaxBuyDate()).build();
-        shoppingListRepository.save(sharedSL);
+        sharedSL = shoppingListRepository.save(sharedSL);
+        CompleteShoppingListResponse crrOwned = shoppingListService.getListFromId(t, idSLToShare);
+        ShoppingList finalSharedSL = sharedSL;
+        crrOwned.getSli().forEach(i -> {
+            ShoppingListIngredient newSI = ShoppingListIngredient.builder()
+                    .ingredient(i.getIngredient())
+                    .quantity(i.getQuantity())
+                    .shoppingList(finalSharedSL)
+                    .unit(i.getUnit()).build();
+            shoppingListIngredientRepository.save(newSI);
+        });
+        crrOwned.getRsl().forEach(r -> {
+            ReceipeShoppingList newRS = ReceipeShoppingList.builder()
+                    .receipe(r.getReceipe())
+                    .shoppingList(finalSharedSL).build();
+            receipeShoppingListRepository.save(newRS);
+        });
         return "OK";
     }
 
