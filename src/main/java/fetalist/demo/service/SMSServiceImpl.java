@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 
+import static java.lang.Math.round;
+
 @Service
 @AllArgsConstructor
 public class SMSServiceImpl implements SMSService {
@@ -114,7 +116,7 @@ public class SMSServiceImpl implements SMSService {
 
         for (ShoppingListIngredient ingredient : slToShare.getSli()) {
             messageBuilder.append("  - ").append(ingredient.getIngredient().getName())
-                    .append("(").append(ingredient.getQuantity());
+                    .append("(").append(round(100*ingredient.getQuantity())/100);
             if (!Objects.equals(ingredient.getUnit().getName(), "---")
                     && !Objects.equals(ingredient.getUnit().getName(), "null")
                     && !Objects.equals(ingredient.getUnit().getName(), "")) messageBuilder.append(" ").append(ingredient.getUnit().getName());
