@@ -30,7 +30,7 @@ public class SMSServiceImpl implements SMSService {
     public String shareSList(Token t, long idUserToSend, long idSLToShare) {
         VonageClient client = VonageClient.builder().apiKey("9dce1d5f").apiSecret("PAVZjYq0xIBObWl6").build();
         Users otherUser = Users.builder().idUser(idUserToSend).build();
-        Friend f = idUserToSend == t.getUsers().getIdUser() ? Friend.builder().user1(t.getUsers()).status("ACCEPTED").build() : friendRepository.findBy(
+        Friend f = idUserToSend == t.getUsers().getIdUser() ? Friend.builder().user1(t.getUsers()).status(Friend.ACCEPTED).build() : friendRepository.findBy(
                 Example.of(
                         Friend.builder()
                                 .user1(t.getUsers())
@@ -45,7 +45,7 @@ public class SMSServiceImpl implements SMSService {
         if (f == null || !Objects.equals(f.getStatus(), Friend.ACCEPTED)) {
             return "Not friend with given user";
         }
-        ShoppingList slToShare = shoppingListRepository.findById(idSLToShare).orElse(null);
+        ShoppingList slToShare = shoppingListRepository.findBy(Example.of(ShoppingList.builder().id(idSLToShare).build()), FluentQuery.FetchableFluentQuery::first).orElse(null);
         if (slToShare == null || !Objects.equals(slToShare.getUser().getIdUser(), t.getUsers().getIdUser())) return "This list isn't yours";
         TextMessage message = new TextMessage("Fetaliste",
                 Objects.equals(f.getUser1().getIdUser(), t.getUsers().getIdUser()) ? f.getUser2().getPhone() : f.getUser1().getPhone(),
