@@ -12,7 +12,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
-class PopulateDBServiceControllerTest {
+class PopulateDBControllerTest {
 
     private MockMvc mockMvc;
 
@@ -22,7 +22,7 @@ class PopulateDBServiceControllerTest {
     @BeforeEach
     void setup() {
         populateDBService = mock(PopulateDBService.class);
-        mockMvc = standaloneSetup(new PopulateDBServiceController(populateDBService)).build();
+        mockMvc = standaloneSetup(new PopulateDBController(populateDBService)).build();
     }
 
     @Test
