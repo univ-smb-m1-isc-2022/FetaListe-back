@@ -15,7 +15,10 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
+
+import static java.lang.Math.round;
 
 @Service
 @AllArgsConstructor
@@ -28,9 +31,14 @@ public class SMSServiceImpl implements SMSService {
     private ShoppingListService shoppingListService;
     @Override
     public String shareSList(Token t, long idUserToSend, long idSLToShare) {
+        System.out.println("\u001B[32m");
+        System.out.println(t);
+        System.out.println(idSLToShare);
+        System.out.println(idUserToSend);
+        System.out.println("\u001B[0m");
         VonageClient client = VonageClient.builder().apiKey("9dce1d5f").apiSecret("PAVZjYq0xIBObWl6").build();
         Users otherUser = Users.builder().idUser(idUserToSend).build();
-        Friend f = idUserToSend == t.getUsers().getIdUser() ? Friend.builder().user1(t.getUsers()).status(Friend.ACCEPTED).build() : friendRepository.findBy(
+        Friend f = idUserToSend == t.getUsers().getIdUser() ? Friend.builder().user1(t.getUsers()).user2(t.getUsers()).status(Friend.ACCEPTED).build() : friendRepository.findBy(
                 Example.of(
                         Friend.builder()
                                 .user1(t.getUsers())
@@ -45,8 +53,9 @@ public class SMSServiceImpl implements SMSService {
         if (f == null || !Objects.equals(f.getStatus(), Friend.ACCEPTED)) {
             return "Not friend with given user";
         }
-        ShoppingList slToShare = shoppingListRepository.findBy(Example.of(ShoppingList.builder().id(idSLToShare).build()), FluentQuery.FetchableFluentQuery::first).orElse(null);
-        if (slToShare == null) return "This list isn't yours";
+        List<ShoppingList> slToSharePossible = shoppingListRepository.findAll().stream().filter(sl -> sl.getId() == idSLToShare).toList();
+        if (slToSharePossible.size() == 0) return "This list isn't yours";
+        ShoppingList slToShare = slToSharePossible.get(0);
         TextMessage message = new TextMessage("Fetaliste",
                 Objects.equals(f.getUser1().getIdUser(), t.getUsers().getIdUser()) ? f.getUser2().getPhone() : f.getUser1().getPhone(),
                 this.createMessageFrom(t.getUsers().getName(), shoppingListService.getListFromId(t,slToShare.getId()))
@@ -107,7 +116,7 @@ public class SMSServiceImpl implements SMSService {
 
         for (ShoppingListIngredient ingredient : slToShare.getSli()) {
             messageBuilder.append("  - ").append(ingredient.getIngredient().getName())
-                    .append("(").append(ingredient.getQuantity());
+                    .append("(").append(round(100*ingredient.getQuantity())/100);
             if (!Objects.equals(ingredient.getUnit().getName(), "---")
                     && !Objects.equals(ingredient.getUnit().getName(), "null")
                     && !Objects.equals(ingredient.getUnit().getName(), "")) messageBuilder.append(" ").append(ingredient.getUnit().getName());
