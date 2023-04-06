@@ -29,6 +29,11 @@ public class SMSServiceImpl implements SMSService {
     private ShoppingListService shoppingListService;
     @Override
     public String shareSList(Token t, long idUserToSend, long idSLToShare) {
+        System.out.println("\u001B[32m");
+        System.out.println(t);
+        System.out.println(idSLToShare);
+        System.out.println(idUserToSend);
+        System.out.println("\u001B[0m");
         VonageClient client = VonageClient.builder().apiKey("9dce1d5f").apiSecret("PAVZjYq0xIBObWl6").build();
         Users otherUser = Users.builder().idUser(idUserToSend).build();
         Friend f = idUserToSend == t.getUsers().getIdUser() ? Friend.builder().user1(t.getUsers()).status(Friend.ACCEPTED).build() : friendRepository.findBy(
