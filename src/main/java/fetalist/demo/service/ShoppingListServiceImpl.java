@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -40,7 +41,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
 
     @Override
     public List<ShoppingList> getListOf(Token t) {
-        return shoppingListRepository.findAll(Example.of(ShoppingList.builder().user(t.getUsers()).build()));
+        return shoppingListRepository.findAll().stream().filter(shoppingList -> Objects.equals(shoppingList.getUser().getIdUser(), t.getUsers().getIdUser())).collect(Collectors.toList());
     }
 
     @Override
